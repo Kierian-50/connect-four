@@ -262,9 +262,10 @@ Etat calculerEtat(Partie* partie) {
 
 }
 
-int bouclePrincipale(Partie* partie) {
+int bouclePrincipale(Partie* partie) { // TODO Rajouter les couleurs
     Etat etat = calculerEtat(partie);
     while (etat == EN_COURS) {
+        printf("\nLe joueur %d joue !\n\n", partie->tour);
         int selection;
         // wchar_t : Pour utiliser les accents
         printf("Choisissez la colonne dans laquelle vous souhaitez inserer votre jeton :");
@@ -276,7 +277,10 @@ int bouclePrincipale(Partie* partie) {
                 scanf("%d", &selection);
             }
             coup = jouerCoup(partie, selection);
-            if (coup) afficher(partie);
+            if (coup) {
+                afficher(partie);
+//                printf("evaluation : %d", evaluationCase(partie, 5, 0)); en dev
+            }
         } while (coup != 1);
         etat = calculerEtat(partie);
         if (etat == EN_COURS) partie->tour = 2 - partie->tour + 1;
