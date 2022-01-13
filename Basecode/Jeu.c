@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * Allows to display current game
+ * @param partie - game to display
+ */
 void afficher(Partie* partie) {
     for (int i=0; i<6; i++){
         for (int ii=0; ii<7; ii++){
@@ -25,6 +29,12 @@ void afficher(Partie* partie) {
     printf("\n");
 }
 
+/**
+ * ALlows to play a move in a specific column.
+ * @param partie - game on which we must place the move
+ * @param colonne - column of the game in which move is placed
+ * @return 0 if column is invalid or 1
+ */
 int jouerCoup(Partie* partie, int colonne) {
     int ret = 0;
     if (colonne >= 1 && colonne <= 7) {
@@ -32,7 +42,7 @@ int jouerCoup(Partie* partie, int colonne) {
         for (int i = 0; i < 6; i++) {
             int stop = 0;
             if (partie->plateau[i][colonne] == J1 || partie->plateau[i][colonne] == J2) {
-                // Si la colonne n'est pas déjà remplie (c-à-d la première ligne de cette colonne contient déjà un pion)
+                // If the column is not already filled (i.e. the first row of this column already contains a counter)
                 if (i != 0) {
                     partie->plateau[i - 1][colonne] = partie->tour == 1 ? J1 : J2;
                 }
@@ -48,6 +58,11 @@ int jouerCoup(Partie* partie, int colonne) {
     return ret;
 }
 
+/**
+ * Allows to check the state of the game (win, lose and egality)
+ * @param partie game t
+ * @return
+ */
 Etat calculerEtat(Partie* partie) {
 
     int isBoardFull = 0; // 0 = True ; 1 = False

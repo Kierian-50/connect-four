@@ -7,9 +7,9 @@
 int main(int argc, char** argv){
     Partie partie;
 
-    //testAfficher();
-    //testCalculerEtat();
-    //testJouerCoup();
+    testAfficher();
+    testJouerCoup();
+    testCalculerEtat();
 
     int tour = 2;
     do{
