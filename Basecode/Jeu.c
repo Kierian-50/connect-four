@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void afficher(Partie* partie){
+void afficher(Partie* partie) {
     for (int i=0; i<6; i++){
         for (int ii=0; ii<7; ii++){
             printf("[");
@@ -24,14 +24,28 @@ void afficher(Partie* partie){
     }
 }
 
-int jouerCoup(Partie* partie, int colonne){
-    return 0;
+int jouerCoup(Partie* partie, int colonne) {
+    for (int i = 0; i < 6; i++) {
+        if (partie->plateau[i][colonne] == J1 || partie->plateau[i][colonne] == J2) {
+            partie->plateau[i-1][colonne] = partie->tour == 1 ? J1 : J2;
+            break;
+        }
+    }
 }
 
-Etat calculerEtat(Partie* partie){
+Etat calculerEtat(Partie* partie) {
     return EN_COURS;
 }
 
-int bouclePrincipale(Partie* partie){
-    return 0;
+int bouclePrincipale(Partie* partie) {
+    while (calculerEtat(partie) == EN_COURS) {
+        int selection;
+        printf("Choisissez la colonne dans laquelle vous souhaitez insérer votre jeton : ");
+        scanf("%d", &selection);
+        printf("Selection : %d", selection);
+        afficher(partie);
+        jouerCoup(partie, selection);
+        calculerEtat(partie);
+    }
+    return 1;
 }

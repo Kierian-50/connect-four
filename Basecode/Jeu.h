@@ -5,7 +5,7 @@ typedef enum{EN_COURS, VICTOIRE_J1, VICTOIRE_J2, EGALITE} Etat;
 //Les valeurs possibles d'une case dans la grille
 typedef enum{VIDE, J1, J2} Case;
 
-typedef struct{
+typedef struct {
     Case plateau[6][7]; //la grille de jeu, la ligne 0 est la plus proche du sol
     int tour; //1 ou 2, le joueur dont c'est le tour
 } Partie;
