@@ -186,6 +186,7 @@ int bouclePrincipale(Partie* partie) {
         int coup = 1;
         do {
             if (coup == 0) printf("Veuillez choisir une colonne non remplie entre 1 et 7.");
+            scanf("%d", &selection);
             coup = jouerCoup(partie, selection);
         } while (coup != 1);
         calculerEtat(partie);
