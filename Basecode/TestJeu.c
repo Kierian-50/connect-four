@@ -68,7 +68,7 @@ void testAfficher() {
 void testCalculerEtat() { // TODO use if and correct limit case with full board
 
     printf("testCalculerEtat");
-    printf("Test cas vertical de J1 gagnant après quatre coup\n");
+    printf("Test cas vertical de J2 gagnant après quatre coup\n");
 
     Partie gameVertical;
 
@@ -80,24 +80,26 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
     }
     afficher(&gameVertical);
     printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
-    gameVertical.plateau[0][0] = J1;
+    gameVertical.plateau[0][0] = J2;
     afficher(&gameVertical);
-    gameVertical.plateau[0][1] = J1;
+    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
+    gameVertical.plateau[0][1] = J2;
     afficher(&gameVertical);
-    gameVertical.plateau[0][2] = J1;
+    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
+    gameVertical.plateau[0][2] = J2;
     afficher(&gameVertical);
-    gameVertical.plateau[0][3] = J1;
+    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
+    gameVertical.plateau[0][3] = J2;
     afficher(&gameVertical);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
 
-    printf("Etat de la game : %d \n", calculerEtat(&gameVertical));
 
     printf("------------------------------------------------\n");
-
-    printf("Test cas horizontal de J2 gagnant après quatre coup\n");
+    printf("Test cas horizontal de J1 gagnant après quatre coup\n");
 
     Partie gameHorizontal;
 
-    gameVertical.tour = 0;
+    gameHorizontal.tour = 0;
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
             gameHorizontal.plateau[i][j] = VIDE;
@@ -105,43 +107,46 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
     }
     afficher(&gameHorizontal);
     printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
-    gameHorizontal.plateau[0][0] = J2;
-    afficher(&gameHorizontal);
-    gameHorizontal.plateau[1][0] = J2;
-    afficher(&gameHorizontal);
-    gameHorizontal.plateau[2][0] = J2;
-    afficher(&gameHorizontal);
-    gameHorizontal.plateau[3][0] = J2;
-    afficher(&gameHorizontal);
 
-    printf("Etat de la game : %d \n", calculerEtat(&gameHorizontal));
+    gameHorizontal.plateau[0][0] = J1;
+    afficher(&gameHorizontal);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
+    gameHorizontal.plateau[1][0] = J1;
+    afficher(&gameHorizontal);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
+    gameHorizontal.plateau[2][0] = J1;
+    afficher(&gameHorizontal);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
+    gameHorizontal.plateau[3][0] = J1;
+    afficher(&gameHorizontal);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
 
-    printf("------------------------------------------------\n");
-
+    printf("----------------------------------");
     printf("Test cas diagonal de J2 gagnant après quatre coup\n");
 
-    Partie gameDiagonal;
+    Partie gameDiag;
 
-    gameDiagonal.tour = 0;
+    gameDiag.tour = 0;
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
-            gameDiagonal.plateau[i][j] = VIDE;
+            gameDiag.plateau[i][j] = VIDE;
         }
     }
-    afficher(&gameDiagonal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiagonal));
-    gameDiagonal.plateau[0][0] = J2;
-    afficher(&gameDiagonal);
-    gameDiagonal.plateau[1][1] = J2;
-    afficher(&gameDiagonal);
-    gameDiagonal.plateau[2][2] = J2;
-    afficher(&gameDiagonal);
-    gameDiagonal.plateau[3][3] = J2;
-    afficher(&gameDiagonal);
-    gameDiagonal.plateau[4][4] = J2;
-    afficher(&gameDiagonal);
+    afficher(&gameDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
 
-    printf("Etat de la game : %d \n", calculerEtat(&gameDiagonal));
+    gameDiag.plateau[0][0] = J1;
+    afficher(&gameDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+    gameDiag.plateau[1][1] = J1;
+    afficher(&gameDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+    gameDiag.plateau[2][2] = J1;
+    afficher(&gameDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+    gameDiag.plateau[3][3] = J1;
+    afficher(&gameDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
 
     printf("------------------------------------------------\n");
 
@@ -202,9 +207,6 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
     afficher(&gameFull);
 
     printf("Etat de la game : %d \n", calculerEtat(&gameFull));
-
-    printf("%d", gameFull.plateau[8][7]);
-
 }
 
 void testJouerCoup() {

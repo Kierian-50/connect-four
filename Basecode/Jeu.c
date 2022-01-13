@@ -78,7 +78,7 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check vertically
 
-                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && y+1 >= 0 && y+1 <= 7 && nb_pawn < 4) {
                     y++;
                     nb_pawn++;
                 }
@@ -86,7 +86,7 @@ Etat calculerEtat(Partie* partie) {
                 x = i;
                 y = ii;
 
-                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && y-1 >= 0 && y-1 <= 7 && nb_pawn < 4) {
                     y--;
                     nb_pawn++;
                 }
@@ -106,7 +106,7 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check horizontally
 
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 6 && nb_pawn < 4) {
                     x++;
                     nb_pawn++;
                 }
@@ -114,7 +114,7 @@ Etat calculerEtat(Partie* partie) {
                 x = i;
                 y = ii;
 
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y] && x-1 >= 0 && x-1 <= 6 && nb_pawn < 4) {
                     x--;
                     nb_pawn++;
                 }
@@ -134,7 +134,7 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check diagonally
 
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && x+1 >= 0 && y+1 >= 0 && x+1 <= 6 && y+1 <= 7 && nb_pawn < 4) {
                     x++;
                     y++;
                     nb_pawn++;
@@ -143,7 +143,7 @@ Etat calculerEtat(Partie* partie) {
                 x = i;
                 y = ii;
 
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && x-1 >= 0 && y-1 >= 0 && x-1 <= 6 && y-1 <= 7 && nb_pawn < 4) {
                     x--;
                     y--;
                     nb_pawn++;

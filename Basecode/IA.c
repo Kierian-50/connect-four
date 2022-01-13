@@ -7,6 +7,13 @@ Partie* copierPartie(Partie* partie){
 }
 
 int evaluationCase(Partie* partie, int ligne, int colonne){
+
+    // Align four pawns
+
+    // Avoid four pawns
+
+    // Best choice
+
     return 0;
 }
 
