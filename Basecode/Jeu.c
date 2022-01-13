@@ -107,7 +107,10 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check horizontally
 
-                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && y+1 >= 0 && y+1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x][y+1] &&
+                        y+1 >= 0 &&
+                        y+1 <= 6 &&
+                        nb_pawn < 4) {
                     y++;
                     nb_pawn++;
                 }
@@ -115,16 +118,19 @@ Etat calculerEtat(Partie* partie) {
                 x = i;
                 y = ii;
 
-                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && y-1 >= 0 && y-1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x][y-1] &&
+                        y-1 >= 0 &&
+                        y-1 <= 6 &&
+                        nb_pawn < 4) {
                     y--;
                     nb_pawn++;
                 }
 
                 // Analyse
                 if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == 1) {
+                    if (partie->plateau[i][ii] == J1) {
                         return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == 2) {
+                    } else if (partie->plateau[i][ii] == J2) {
                         return VICTOIRE_J2;
                     }
                 } else {
@@ -150,9 +156,9 @@ Etat calculerEtat(Partie* partie) {
 
                 // Analyse
                 if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == 1) {
+                    if (partie->plateau[i][ii] == J1) {
                         return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == 2) {
+                    } else if (partie->plateau[i][ii] == J2) {
                         return VICTOIRE_J2;
                     }
                 } else {
@@ -163,7 +169,12 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check diagonally x++ y++
 
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && x+1 >= 0 && y+1 >= 0 && x+1 <= 5 && y+1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] &&
+                        x+1 >= 0 &&
+                        y+1 >= 0 &&
+                        x+1 <= 5 &&
+                        y+1 <= 6 &&
+                        nb_pawn < 4) {
                     x++;
                     y++;
                     nb_pawn++;
@@ -173,7 +184,12 @@ Etat calculerEtat(Partie* partie) {
                 y = ii;
 
 
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && x-1 >= 0 && y-1 >= 0 && x-1 <= 5 && y-1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] &&
+                        x-1 >= 0 &&
+                        y-1 >= 0 &&
+                        x-1 <= 5 &&
+                        y-1 <= 6 &&
+                        nb_pawn < 4) {
                     x--;
                     y--;
                     nb_pawn++;
@@ -181,9 +197,9 @@ Etat calculerEtat(Partie* partie) {
 
                 // Analyse
                 if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == 1) {
+                    if (partie->plateau[i][ii] == J1) {
                         return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == 2) {
+                    } else if (partie->plateau[i][ii] == J2) {
                         return VICTOIRE_J2;
                     }
                 } else {
@@ -194,7 +210,12 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check y-- x++
 
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y-1] && x+1 >= 0 && y-1 >= 0 && x+1 <= 5 && y-1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y-1] &&
+                        x+1 >= 0 &&
+                        y-1 >= 0 &&
+                        x+1 <= 5 &&
+                        y-1 <= 6 &&
+                        nb_pawn < 4) {
                     x++;
                     y--;
                     nb_pawn++;
@@ -203,7 +224,12 @@ Etat calculerEtat(Partie* partie) {
                 x = i;
                 y = ii;
 
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y+1] && x-1 >= 0 && y+1 >= 0 && x-1 <= 5 && y+1 <= 6 && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y+1] &&
+                        x-1 >= 0 &&
+                        y+1 >= 0 &&
+                        x-1 <= 5 &&
+                        y+1 <= 6 &&
+                        nb_pawn < 4) {
                     x--;
                     y++;
                     nb_pawn++;
@@ -211,9 +237,9 @@ Etat calculerEtat(Partie* partie) {
 
                 // Analyse
                 if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == 1) {
+                    if (partie->plateau[i][ii] == J1) {
                         return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == 2) {
+                    } else if (partie->plateau[i][ii] == J2) {
                         return VICTOIRE_J2;
                     }
                 } else {
@@ -240,12 +266,13 @@ int bouclePrincipale(Partie* partie) {
     Etat etat = calculerEtat(partie);
     while (etat == EN_COURS) {
         int selection;
-        printf("Choisissez la colonne dans laquelle vous souhaitez insérer votre jeton : ");
+        // wchar_t : Pour utiliser les accents
+        printf("Choisissez la colonne dans laquelle vous souhaitez inserer votre jeton :");
         scanf("%d", &selection);
         int coup = 1;
         do {
             if (coup == 0) {
-                printf("Veuillez choisir une colonne non remplie entre 1 et 7 : ");
+                printf("Veuillez choisir une colonne non remplie entre 1 et 7 :");
                 scanf("%d", &selection);
             }
             coup = jouerCoup(partie, selection);
