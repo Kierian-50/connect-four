@@ -246,6 +246,30 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
     gameDiag.plateau[2][1] = J1;
     afficher(&gameDiag);
     printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+
+    printf("----------------------------------");
+    printf("Test cas diagonal de J2 gagnant après quatre coup\n");
+
+    Partie gameBugDiag;
+
+    gameBugDiag.tour = 0;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            gameBugDiag.plateau[i][j] = VIDE;
+        }
+    }
+    gameBugDiag.plateau[5][0] = J1;
+    afficher(&gameBugDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
+    gameBugDiag.plateau[4][1] = J1;
+    afficher(&gameBugDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
+    gameBugDiag.plateau[3][2] = J1;
+    afficher(&gameBugDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
+    gameBugDiag.plateau[2][3] = J1;
+    afficher(&gameBugDiag);
+    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
 }
 
 void testJouerCoup() {
