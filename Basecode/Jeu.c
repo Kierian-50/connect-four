@@ -57,11 +57,6 @@ Etat calculerEtat(Partie* partie) {
 
             if (partie->plateau[i][ii] != VIDE) {
 
-                printf("\ncurrent pawn : ");
-                printf("\ni : %d ; ", i);
-                printf("ii %d \n", ii);
-
-
                 int nb_pawn = 1;
                 int x = i;
                 int y = ii;
@@ -127,25 +122,17 @@ Etat calculerEtat(Partie* partie) {
                 while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && nb_pawn < 4) {
                     x++;
                     y++;
-                    printf("\ni : %d ; ", x);
-                    printf("ii %d \n", y);
                     nb_pawn++;
                 }
-
-                printf("-------------------\n");
 
                 x = i;
                 y = ii;
 
                 while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && nb_pawn < 4) {
-                    printf("\ni : %d ; ", x);
-                    printf("ii %d \n", y);
                     x--;
                     y--;
                     nb_pawn++;
                 }
-
-                printf("nb pawn : %d", nb_pawn);
 
                 // Analyse
                 if (nb_pawn >= 4) {
