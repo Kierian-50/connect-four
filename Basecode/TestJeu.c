@@ -59,8 +59,57 @@ void testAfficher() {
         }
     }
 
-    printf("Affichage d'un vrai tableau de jeu : \n");
+    printf("Affichage d'un tableau de jeu : \n");
     afficher(&realGame);
+    printf("\n---------------------------------\n");
+
+}
+
+void testJouerCoup() {
+
+    printf("Test du jeu d'un coup invalide :\n");
+
+    Partie partie;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coupInvalide = jouerCoup(&partie, -2);
+    if (coupInvalide == 0) printf("Le coup joué n'a pas été retenu car il est invalide.\n");
+    else printf("Le coup joué est invalide mais a été retenu.\n");
+    afficher(&partie);
+    printf("\n---------------------------------\n");
+
+    printf("Test du jeu d'un coup valide :\n");
+
+    Partie partie2;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie2.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coupValide = jouerCoup(&partie2, 2);
+    if (coupValide == 1) printf("Le coup joué a été retenu car il est valide.\n");
+    else printf("Le coup joué est valide mais n'a pas été retenu.\n");
+    afficher(&partie2);
+    printf("\n---------------------------------\n");
+
+    printf("Test de l'empilement des jetons sur une colonne :\n");
+
+    Partie partie3;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie3.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coup1 = jouerCoup(&partie3, 2);
+    int coup2 = jouerCoup(&partie3, 2);
+    int coup3 = jouerCoup(&partie3, 2);
+    afficher(&partie2);
     printf("\n---------------------------------\n");
 
 }
