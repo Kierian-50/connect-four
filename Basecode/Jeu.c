@@ -2,6 +2,7 @@
 #include "IA.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Allows to display current game
@@ -63,134 +64,168 @@ int jouerCoup(Partie* partie, int colonne) {
  * @param partie game t
  * @return
  */
+
 Etat calculerEtat(Partie* partie) {
+    int ret = EN_COURS;
 
-    int isBoardFull = 0; // 0 = True ; 1 = False
+    int joueurActuel = partie->tour == 1 ? J1 : J2;
 
-    for (int i=0; i<6; i++){
-        for (int ii=0; ii<7; ii++){
-
-            if (partie->plateau[i][ii] != VIDE) {
-
-                int nb_pawn = 1;
-                int x = i;
-                int y = ii;
-
-                // Check vertically
-
-                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && y+1 >= 0 && y+1 <= 7 && nb_pawn < 4) {
-                    y++;
-                    nb_pawn++;
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 7; j++) {
+            if (j + 4 < 7 && joueurActuel == partie->plateau[i][j + 1] && joueurActuel == partie->plateau[i][j + 2] && joueurActuel == partie->plateau[i][j + 3] && joueurActuel == partie->plateau[i][j + 4]) {
+                ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
+            } else if (i + 4 < 6) {
+                if (joueurActuel == partie->plateau[i + 1][j] && joueurActuel == partie->plateau[i + 2][j] && joueurActuel == partie->plateau[i + 3][j] && joueurActuel == partie->plateau[i + 4][j]) {
+                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
+                } else if (j + 4 < 7 && joueurActuel == partie->plateau[i + 1][j + 1] && joueurActuel == partie->plateau[i + 2][j + 2] && joueurActuel == partie->plateau[i + 3][j + 3] && joueurActuel == partie->plateau[i + 4][j + 4]) {
+                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
+                } else if (j - 4 >= 0 && joueurActuel == partie->plateau[i + 1][j - 1] && joueurActuel == partie->plateau[i + 2][j - 2] && joueurActuel == partie->plateau[i + 3][j - 3] && joueurActuel == partie->plateau[i + 4][j - 4]) {
+                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
                 }
 
-                x = i;
-                y = ii;
-
-                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && y-1 >= 0 && y-1 <= 7 && nb_pawn < 4) {
-                    y--;
-                    nb_pawn++;
-                }
-
-                // Analyse
-                if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == J1) {
-                        return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == J2) {
-                        return VICTOIRE_J2;
-                    }
-                } else {
-                    nb_pawn = 1;
-                    x = i;
-                    y = ii;
-                }
-
-                // Check horizontally
-
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 6 && nb_pawn < 4) {
-                    x++;
-                    nb_pawn++;
-                }
-
-                x = i;
-                y = ii;
-
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y] && x-1 >= 0 && x-1 <= 6 && nb_pawn < 4) {
-                    x--;
-                    nb_pawn++;
-                }
-
-                // Analyse
-                if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == J1) {
-                        return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == J2) {
-                        return VICTOIRE_J2;
-                    }
-                } else {
-                    nb_pawn = 1;
-                    x = i;
-                    y = ii;
-                }
-
-                // Check diagonally
-
-                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && x+1 >= 0 && y+1 >= 0 && x+1 <= 6 && y+1 <= 7 && nb_pawn < 4) {
-                    x++;
-                    y++;
-                    nb_pawn++;
-                }
-
-                x = i;
-                y = ii;
-
-                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && x-1 >= 0 && y-1 >= 0 && x-1 <= 6 && y-1 <= 7 && nb_pawn < 4) {
-                    x--;
-                    y--;
-                    nb_pawn++;
-                }
-
-                // Analyse
-                if (nb_pawn >= 4) {
-                    if (partie->plateau[i][ii] == J1) {
-                        return VICTOIRE_J1;
-                    } else if (partie->plateau[i][ii] == J2) {
-                        return VICTOIRE_J2;
-                    }
-                } else {
-                    nb_pawn = 1;
-                    x = i;
-                    y = ii;
-                }
-            } else {
-                isBoardFull = 1;
             }
-
+            if (ret != EN_COURS) break;
         }
+        if (ret != EN_COURS) break;
     }
 
-    if (isBoardFull == 0) {
-        return EGALITE;
-    } else {
-        return EN_COURS;
-    }
-
+    return ret;
 }
 
+//Etat calculerEtat(Partie* partie) {
+//
+//    int isBoardFull = 0; // 0 = True ; 1 = False
+//
+//    for (int i=0; i<6; i++){
+//        for (int ii=0; ii<7; ii++){
+//
+//            if (partie->plateau[i][ii] != VIDE) {
+//
+//                int nb_pawn = 1;
+//                int x = i;
+//                int y = ii;
+//
+//                // Check vertically
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && y+1 >= 0 && y+1 <= 7 && nb_pawn < 4) {
+//                    y++;
+//                    nb_pawn++;
+//                }
+//
+//                x = i;
+//                y = ii;
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && y-1 >= 0 && y-1 <= 7 && nb_pawn < 4) {
+//                    y--;
+//                    nb_pawn++;
+//                }
+//
+//                // Analyse
+//                if (nb_pawn >= 4) {
+//                    if (partie->plateau[i][ii] == J1) {
+//                        return VICTOIRE_J1;
+//                    } else if (partie->plateau[i][ii] == J2) {
+//                        return VICTOIRE_J2;
+//                    }
+//                } else {
+//                    nb_pawn = 1;
+//                    x = i;
+//                    y = ii;
+//                }
+//
+//                // Check horizontally
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 6 && nb_pawn < 4) {
+//                    x++;
+//                    nb_pawn++;
+//                }
+//
+//                x = i;
+//                y = ii;
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x-1][y] && x-1 >= 0 && x-1 <= 6 && nb_pawn < 4) {
+//                    x--;
+//                    nb_pawn++;
+//                }
+//
+//                // Analyse
+//                if (nb_pawn >= 4) {
+//                    if (partie->plateau[i][ii] == J1) {
+//                        return VICTOIRE_J1;
+//                    } else if (partie->plateau[i][ii] == J2) {
+//                        return VICTOIRE_J2;
+//                    }
+//                } else {
+//                    nb_pawn = 1;
+//                    x = i;
+//                    y = ii;
+//                }
+//
+//                // Check diagonally
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && x+1 >= 0 && y+1 >= 0 && x+1 <= 6 && y+1 <= 7 && nb_pawn < 4) {
+//                    x++;
+//                    y++;
+//                    nb_pawn++;
+//                }
+//
+//                x = i;
+//                y = ii;
+//
+//
+//                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && x-1 >= 0 && y-1 >= 0 && x-1 <= 6 && y-1 <= 7 && nb_pawn < 4) {
+//                    x--;
+//                    y--;
+//                    nb_pawn++;
+//                }
+//
+//                // Analyse
+//                if (nb_pawn >= 4) {
+//                    if (partie->plateau[i][ii] == J1) {
+//                        return VICTOIRE_J1;
+//                    } else if (partie->plateau[i][ii] == J2) {
+//                        return VICTOIRE_J2;
+//                    }
+//                } else {
+//                    nb_pawn = 1;
+//                    x = i;
+//                    y = ii;
+//                }
+//            } else {
+//                isBoardFull = 1;
+//            }
+//
+//        }
+//    }
+//
+//    if (isBoardFull == 0) {
+//        return EGALITE;
+//    } else {
+//        return EN_COURS;
+//    }
+//
+//}
+
 int bouclePrincipale(Partie* partie) {
+    Etat etat;
     while (calculerEtat(partie) == EN_COURS) {
         int selection;
         printf("Choisissez la colonne dans laquelle vous souhaitez insérer votre jeton : ");
         scanf("%d", &selection);
-        printf("Selection : %d", selection);
-        afficher(partie);
         int coup = 1;
         do {
-            if (coup == 0) printf("Veuillez choisir une colonne non remplie entre 1 et 7.");
-            scanf("%d", &selection);
+            if (coup == 0) {
+                printf("Veuillez choisir une colonne non remplie entre 1 et 7 : ");
+                scanf("%d", &selection);
+            }
             coup = jouerCoup(partie, selection);
+            if (coup) afficher(partie);
         } while (coup != 1);
-        calculerEtat(partie);
+        etat = calculerEtat(partie);
         partie->tour = 2 - partie->tour + 1;
     }
-    return 1;
+    if (etat != EGALITE) printf("Gagnant :\n%s", partie->tour == 1 ? "J1" : "J2");
+    else printf("Égalité !");
+    //printf("%s", strcat("%s a gagné la partie !", partie->tour == 1 ? "J1" : "J2"));
+    return 0;
 }
