@@ -5,4 +5,5 @@
 #pragma once
 
 void testAfficher();
+void testCalculerEtat();
 void testJouerCoup();
