@@ -70,6 +70,7 @@ void testJouerCoup() {
     printf("Test du jeu d'un coup invalide :\n");
 
     Partie partie;
+    partie.tour = 1;
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
             partie.plateau[i][j] = VIDE;
@@ -85,6 +86,7 @@ void testJouerCoup() {
     printf("Test du jeu d'un coup valide :\n");
 
     Partie partie2;
+    partie2.tour = 1;
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
             partie2.plateau[i][j] = VIDE;
@@ -100,6 +102,7 @@ void testJouerCoup() {
     printf("Test de l'empilement des jetons sur une colonne :\n");
 
     Partie partie3;
+    partie3.tour = 1;
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
             partie3.plateau[i][j] = VIDE;
@@ -109,7 +112,7 @@ void testJouerCoup() {
     int coup1 = jouerCoup(&partie3, 2);
     int coup2 = jouerCoup(&partie3, 2);
     int coup3 = jouerCoup(&partie3, 2);
-    afficher(&partie2);
+    afficher(&partie3);
     printf("\n---------------------------------\n");
 
 }

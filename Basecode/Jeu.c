@@ -27,10 +27,14 @@ void afficher(Partie* partie) {
 int jouerCoup(Partie* partie, int colonne) {
     int ret = 0;
     if (colonne >= 1 && colonne <= 7) {
+        colonne = colonne - 1;
         for (int i = 0; i < 6; i++) {
             int stop = 0;
             if (partie->plateau[i][colonne] == J1 || partie->plateau[i][colonne] == J2) {
-                partie->plateau[i - 1][colonne] = partie->tour == 1 ? J1 : J2;
+                // Si la colonne n'est pas déjà remplie (c-à-d la première ligne de cette colonne contient déjà un pion)
+                if (i != 0) {
+                    partie->plateau[i - 1][colonne] = partie->tour == 1 ? J1 : J2;
+                }
                 stop = 1;
             } else if (i == 5) {
                 partie->plateau[i][colonne] = partie->tour == 1 ? J1 : J2;
@@ -56,7 +60,7 @@ int bouclePrincipale(Partie* partie) {
         afficher(partie);
         int coup = 1;
         do {
-            if (coup == 0) printf("Veuillez choisir une colonne entre 1 et 7.");
+            if (coup == 0) printf("Veuillez choisir une colonne non remplie entre 1 et 7.");
             coup = jouerCoup(partie, selection);
         } while (coup != 1);
         calculerEtat(partie);
