@@ -1,11 +1,14 @@
 #include "Jeu.h"
+#include "TestJeu.h"
 #include "IA.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 int main(int argc, char** argv){
     Partie partie;
-   
+
+    testAfficher();
+
     int tour = 2;
     do{
         partie.tour = tour;

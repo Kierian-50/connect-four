@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main(int argc, char** argv){
+void testAfficher() {
     // TEST afficher
     Partie emptyGame;
 
@@ -63,5 +63,4 @@ int main(int argc, char** argv){
     afficher(&realGame);
     printf("\n---------------------------------\n");
 
-    return 0;
 }
