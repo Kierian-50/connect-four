@@ -1,2 +1,2 @@
 # connect-four
-This school project creates the connect four in c
+The main goal of this school project is to create a connect four in c
