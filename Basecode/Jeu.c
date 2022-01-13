@@ -57,18 +57,26 @@ Etat calculerEtat(Partie* partie) {
 
             if (partie->plateau[i][ii] != VIDE) {
 
+                printf("\ncurrent pawn : ");
+                printf("\ni : %d ; ", i);
+                printf("ii %d \n", ii);
+
+
                 int nb_pawn = 1;
                 int x = i;
                 int y = ii;
 
                 // Check vertically
 
-                while (partie->plateau[x][y] == partie->plateau[x][y+1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x][y+1] && nb_pawn < 4) {
                     y++;
                     nb_pawn++;
                 }
 
-                while (partie->plateau[x][y] == partie->plateau[x][y-1] && nb_pawn < 4) {
+                x = i;
+                y = ii;
+
+                while (partie->plateau[i][ii] == partie->plateau[x][y-1] && nb_pawn < 4) {
                     y--;
                     nb_pawn++;
                 }
@@ -88,12 +96,15 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check horizontally
 
-                while (partie->plateau[x][y] == partie->plateau[x+1][y] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y] && nb_pawn < 4) {
                     x++;
                     nb_pawn++;
                 }
 
-                while (partie->plateau[x][y] == partie->plateau[x-1][y] && nb_pawn < 4) {
+                x = i;
+                y = ii;
+
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y] && nb_pawn < 4) {
                     x--;
                     nb_pawn++;
                 }
@@ -113,17 +124,28 @@ Etat calculerEtat(Partie* partie) {
 
                 // Check diagonally
 
-                while (partie->plateau[x][y] == partie->plateau[x+1][y+1] && nb_pawn < 4) {
+                while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] && nb_pawn < 4) {
                     x++;
                     y++;
+                    printf("\ni : %d ; ", x);
+                    printf("ii %d \n", y);
                     nb_pawn++;
                 }
 
-                while (partie->plateau[x][y] == partie->plateau[x-1][y-1] && nb_pawn < 4) {
+                printf("-------------------\n");
+
+                x = i;
+                y = ii;
+
+                while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] && nb_pawn < 4) {
+                    printf("\ni : %d ; ", x);
+                    printf("ii %d \n", y);
                     x--;
                     y--;
                     nb_pawn++;
                 }
+
+                printf("nb pawn : %d", nb_pawn);
 
                 // Analyse
                 if (nb_pawn >= 4) {

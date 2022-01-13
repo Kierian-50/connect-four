@@ -156,21 +156,21 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
                 if(j % 2 == 0) {
                     gameFull.plateau[i][j] = J2;
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J2;
                     }
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J2;
                     }
                 } else {
                     gameFull.plateau[i][j] = J1;
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J1;
                     }
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J1;
                     }
                 }
@@ -178,21 +178,21 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
                 if(j % 2 == 0) {
                     gameFull.plateau[i][j] = J1;
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J1;
                     }
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J1;
                     }
                 } else {
                     gameFull.plateau[i][j] = J2;
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J2;
                     }
                     j++;
-                    if (i < 6 && j < 7){
+                    if (i < 5 && j < 6){
                         gameFull.plateau[i][j] = J2;
                     }
                 }
@@ -202,6 +202,8 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
     afficher(&gameFull);
 
     printf("Etat de la game : %d \n", calculerEtat(&gameFull));
+
+    printf("%d", gameFull.plateau[8][7]);
 
 }
 
