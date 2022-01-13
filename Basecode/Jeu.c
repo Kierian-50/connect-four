@@ -207,8 +207,8 @@ Etat calculerEtat(Partie* partie) {
 //}
 
 int bouclePrincipale(Partie* partie) {
-    Etat etat;
-    while (calculerEtat(partie) == EN_COURS) {
+    Etat etat = calculerEtat(partie);
+    while (etat == EN_COURS) {
         int selection;
         printf("Choisissez la colonne dans laquelle vous souhaitez insérer votre jeton : ");
         scanf("%d", &selection);
@@ -222,7 +222,7 @@ int bouclePrincipale(Partie* partie) {
             if (coup) afficher(partie);
         } while (coup != 1);
         etat = calculerEtat(partie);
-        partie->tour = 2 - partie->tour + 1;
+        if (etat == EN_COURS) partie->tour = 2 - partie->tour + 1;
     }
     if (etat != EGALITE) printf("Gagnant :\n%s", partie->tour == 1 ? "J1" : "J2");
     else printf("Égalité !");
