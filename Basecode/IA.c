@@ -3,7 +3,16 @@
 #include <stdio.h>
 
 Partie* copierPartie(Partie* partie){
-    return NULL;
+    Partie p;
+    p.tour = partie->tour;
+
+    for (int i=0; i<6; i++){
+        for (int ii=0; ii<7; ii++){
+            p.plateau[i][ii] = partie->plateau[i][ii];
+        }
+    }
+
+    return &p;
 }
 
 /**
