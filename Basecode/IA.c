@@ -21,10 +21,6 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     int y = colonne;
     int opponent = partie->tour == 1 ? J2 : J1;
 
-    printf("\nLe joueur %d est mon adversaire ! ", opponent);
-    printf("\nLe joueur courant est %d", partie->tour);
-    printf("\nLa case a cote est de %d\n", partie->plateau[5][1]);
-
     // ==============================
     // Align four pawns
     // ==============================
@@ -298,10 +294,157 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     // ===================
     // Best choice
     // ===================
+    // => Si le nombre total de pion de la ligne du joueur ou de case vide de taille max 3 d'un côté, moins trois est supérieur à 0 alors la ligne
+    // La ligne possède au moins une possibilité
 
-    // horizontally // TODO
+    int total_possibility = 0;
+    int total_pawn_line = 0;
 
-    return 0;
+    // ------------------
+    // Check horizontally
+    // ------------------
+
+    while (opponent != partie->plateau[x][y+1] &&
+            y+1 >= 0 &&
+            y+1 <= 6 &&
+            nb_pawn < 4) {
+        y++;
+        nb_pawn++;
+    }
+
+    x = ligne;
+    y = colonne;
+    total_pawn_line += nb_pawn;
+    nb_pawn = 0;
+
+    while (opponent != partie->plateau[x][y+1] &&
+            y-1 >= 0 &&
+            y-1 <= 6 &&
+            nb_pawn < 4) {
+        y--;
+        nb_pawn++;
+    }
+
+    total_pawn_line += nb_pawn;
+
+    if (total_pawn_line-3 > 0) {
+        total_possibility += total_pawn_line - 3;
+    }
+    nb_pawn = 0;
+    total_pawn_line = 0;
+    x = ligne;
+    y = colonne;
+
+    // ------------------
+    // Check vertically
+    // ------------------
+
+    while (opponent != partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 5 && nb_pawn < 4) {
+        x++;
+        nb_pawn++;
+    }
+
+    x = ligne;
+    y = colonne;
+    total_pawn_line += nb_pawn;
+    nb_pawn = 0;
+
+    while (opponent != partie->plateau[x-1][y] && x-1 >= 0 && x-1 <= 5 && nb_pawn < 4) {
+        x--;
+        nb_pawn++;
+    }
+
+    total_pawn_line += nb_pawn;
+
+    if (total_pawn_line-3 > 0) {
+        total_possibility += total_pawn_line - 3;
+    }
+    nb_pawn = 0;
+    total_pawn_line = 0;
+    x = ligne;
+    y = colonne;
+
+    // ------------------
+    // Check diagonally
+    // ------------------
+    // x++ y++
+    while (opponent != partie->plateau[x+1][y+1] &&
+           x+1 >= 0 &&
+           y+1 >= 0 &&
+           x+1 <= 5 &&
+           y+1 <= 6 &&
+           nb_pawn < 4) {
+        x++;
+        y++;
+        nb_pawn++;
+    }
+
+    x = ligne;
+    y = colonne;
+    total_pawn_line += nb_pawn;
+    nb_pawn = 0;
+
+    while (opponent != partie->plateau[x-1][y-1] &&
+           x-1 >= 0 &&
+           y-1 >= 0 &&
+           x-1 <= 5 &&
+           y-1 <= 6 &&
+           nb_pawn < 4) {
+        x--;
+        y--;
+        nb_pawn++;
+    }
+
+    total_pawn_line += nb_pawn;
+
+    if (total_pawn_line-3 > 0) {
+        total_possibility += total_pawn_line - 3;
+    }
+    nb_pawn = 0;
+    total_pawn_line = 0;
+    x = ligne;
+    y = colonne;
+
+    // y-- x++
+    while (opponent != partie->plateau[x+1][y-1] &&
+           x+1 >= 0 &&
+           y-1 >= 0 &&
+           x+1 <= 5 &&
+           y-1 <= 6 &&
+           nb_pawn < 4) {
+        x++;
+        y--;
+        nb_pawn++;
+    }
+
+    x = ligne;
+    y = colonne;
+    total_pawn_line += nb_pawn;
+    nb_pawn = 0;
+
+
+    while (opponent != partie->plateau[x-1][y+1] &&
+           x-1 >= 0 &&
+           y+1 >= 0 &&
+           x-1 <= 5 &&
+           y+1 <= 6 &&
+           nb_pawn < 4) {
+        x--;
+        y++;
+        nb_pawn++;
+    }
+
+    total_pawn_line += nb_pawn;
+
+    if (total_pawn_line-3 > 0) {
+        total_possibility += total_pawn_line - 3;
+    }
+    nb_pawn = 0;
+    total_pawn_line = 0;
+    x = ligne;
+    y = colonne;
+
+    return total_possibility;
 }
 
 int evaluation(Partie* partie){
