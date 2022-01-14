@@ -280,17 +280,22 @@ int bouclePrincipale(Partie* partie) {
                 if (coup) afficher(partie);
             } while (coup != 1);
         } else {
-            int highestColumnEval = 0;
+            int highestEval = 0;
+            int columnToPlay = 0;
             for (int j = 0; j < 7; j++) {
                 for (int i = 0; i < 6; i++) {
-                    if (partie->plateau[i][j] != VIDE) {
-                        int eval = evaluationCase(partie, i - 1, j);
-                        if (eval > highestColumnEval) highestColumnEval = eval;
+                    if (partie->plateau[0][j] == VIDE && (partie->plateau[i][j] != VIDE || i == 5)) {
+                        int eval = evaluationCase(partie, i == 5 ? i : i - 1, j);
+                        if (eval > highestEval) {
+                            highestEval = eval;
+                            columnToPlay = j+1;
+                        }
                         break;
                     }
                 }
             }
-            jouerCoup(partie, highestColumnEval);
+            printf("IA joue : %d\n", columnToPlay);
+            jouerCoup(partie, columnToPlay);
             afficher(partie);
         }
         etat = calculerEtat(partie);
