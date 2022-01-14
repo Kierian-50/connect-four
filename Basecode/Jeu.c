@@ -11,7 +11,7 @@
 void afficher(Partie* partie) {
     for (int i=0; i<6; i++){
         for (int ii=0; ii<7; ii++){
-            printf("[");
+            printf("%s[", "\x1B[0m");
             if (partie->plateau[i][ii] == VIDE){
                 printf(" ");
             } else if (partie->plateau[i][ii] == J1) {
@@ -260,24 +260,39 @@ Etat calculerEtat(Partie* partie) {
 }
 
 int bouclePrincipale(Partie* partie) {
+    printf("1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu :");
+    int mode;
+    scanf("%d", &mode);
     Etat etat = calculerEtat(partie);
     while (etat == EN_COURS) {
         printf("\n%sLe joueur %d joue !\n\n",  partie->tour == 1 ? "\x1B[31m" : "\x1B[34m", partie->tour);
-        int selection;
-        printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton :", "\x1B[0m");
-        scanf("%d", &selection);
-        int coup = 1;
-        do {
-            if (coup == 0) {
-                printf("Veuillez choisir une colonne non remplie entre 1 et 7 :");
-                scanf("%d", &selection);
+        if (mode == 2 || (mode == 1 && partie->tour == 2)) {
+            int colonne;
+            int coup = -1;
+            do {
+                if (coup == -1) {
+                    printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton :", "\x1B[0m");
+                } else {
+                    printf("Veuillez choisir une colonne non remplie entre 1 et 7 :");
+                }
+                scanf("%d", &colonne);
+                coup = jouerCoup(partie, colonne);
+                if (coup) afficher(partie);
+            } while (coup != 1);
+        } else {
+            int highestColumnEval = 0;
+            for (int j = 0; j < 7; j++) {
+                for (int i = 0; i < 6; i++) {
+                    if (partie->plateau[i][j] != VIDE) {
+                        int eval = evaluationCase(partie, i - 1, j);
+                        if (eval > highestColumnEval) highestColumnEval = eval;
+                        break;
+                    }
+                }
             }
-            coup = jouerCoup(partie, selection);
-            if (coup) {
-                afficher(partie);
-//                printf("evaluation : %d", evaluationCase(partie, 5, 0)); en dev
-            }
-        } while (coup != 1);
+            jouerCoup(partie, highestColumnEval);
+            afficher(partie);
+        }
         etat = calculerEtat(partie);
         partie->tour = 2 - partie->tour + 1;
     }
