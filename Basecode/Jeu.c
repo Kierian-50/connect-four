@@ -259,6 +259,12 @@ Etat calculerEtat(Partie* partie) {
 
 }
 
+/**
+ * Allows to start a game loop : player choose to play against another player or against IA,
+ * then loop start and each player play until one of them win
+ * @param partie - game that start
+ * @return
+ */
 int bouclePrincipale(Partie* partie) {
     printf("1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu :");
     int mode;
