@@ -3,16 +3,16 @@
 #include <stdio.h>
 
 Partie* copierPartie(Partie* partie){
-    Partie p;
-    p.tour = partie->tour;
+    Partie* p = calloc(1, sizeof(*partie));
+    p->tour = partie->tour;
 
     for (int i=0; i<6; i++){
         for (int ii=0; ii<7; ii++){
-            p.plateau[i][ii] = partie->plateau[i][ii];
+            p->plateau[i][ii] = partie->plateau[i][ii];
         }
     }
 
-    return &p;
+    return p;
 }
 
 /**
@@ -461,6 +461,39 @@ int evaluation(Partie* partie){
 }
 
 Arbre* minmax(Partie* partie, int profondeur, int IA){
+
+    Arbre *arbre = (Arbre*) calloc(1, sizeof(arbre));
+    arbre->partie = partie;
+
+    Etat state = calculerEtat(partie);
+
+    if (state != EN_COURS) {
+        if (state == VICTOIRE_J1) {
+            arbre->score = 1000;
+            return arbre;
+        } else if (state == VICTOIRE_J2) {
+            arbre->score = -1000;
+            return arbre;
+        } else if (state == EGALITE) {
+
+        }
+    }
+
+    if (profondeur == 0) {
+        return NULL;
+    }
+
+    for (int i=0; i<7; i++) {
+        Arbre a;
+        Partie* p = copierPartie(partie);
+
+        a.partie = p;
+
+        jouerCoup(partie, i);
+
+
+    }
+
     return NULL;
 }
 
