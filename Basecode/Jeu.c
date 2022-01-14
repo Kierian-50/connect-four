@@ -15,11 +15,11 @@ void afficher(Partie* partie) {
             if (partie->plateau[i][ii] == VIDE){
                 printf(" ");
             } else if (partie->plateau[i][ii] == J1) {
-                printf("O");
+                printf("%sO", "\x1B[31m");
             } else if (partie->plateau[i][ii] == J2) {
-                printf("X");
+                printf("%sX", "\x1B[34m");
             }
-            printf("]");
+            printf("%s]", "\x1B[0m");
         }
         printf("\n");
     }
@@ -38,15 +38,12 @@ void afficher(Partie* partie) {
  */
 int jouerCoup(Partie* partie, int colonne) {
     int ret = 0;
-    if (colonne >= 1 && colonne <= 7) {
+    if (colonne >= 1 && colonne <= 7 && partie->plateau[0][colonne - 1] == VIDE) {
         colonne = colonne - 1;
         for (int i = 0; i < 6; i++) {
             int stop = 0;
-            if (partie->plateau[i][colonne] == J1 || partie->plateau[i][colonne] == J2) {
-                // If the column is not already filled (i.e. the first row of this column already contains a counter)
-                if (i != 0) {
-                    partie->plateau[i - 1][colonne] = partie->tour == 1 ? J1 : J2;
-                }
+            if (partie->plateau[i][colonne] != VIDE) {
+                partie->plateau[i - 1][colonne] = partie->tour == 1 ? J1 : J2;
                 stop = 1;
             } else if (i == 5) {
                 partie->plateau[i][colonne] = partie->tour == 1 ? J1 : J2;
@@ -262,13 +259,12 @@ Etat calculerEtat(Partie* partie) {
 
 }
 
-int bouclePrincipale(Partie* partie) { // TODO Rajouter les couleurs
+int bouclePrincipale(Partie* partie) {
     Etat etat = calculerEtat(partie);
     while (etat == EN_COURS) {
-        printf("\nLe joueur %d joue !\n\n", partie->tour);
+        printf("\n%sLe joueur %d joue !\n\n",  partie->tour == 1 ? "\x1B[31m" : "\x1B[34m", partie->tour);
         int selection;
-        // wchar_t : Pour utiliser les accents
-        printf("Choisissez la colonne dans laquelle vous souhaitez inserer votre jeton :");
+        printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton :", "\x1B[0m");
         scanf("%d", &selection);
         int coup = 1;
         do {
