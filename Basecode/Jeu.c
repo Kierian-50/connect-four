@@ -283,7 +283,7 @@ int bouclePrincipale(Partie* partie) { // TODO Rajouter les couleurs
             }
         } while (coup != 1);
         etat = calculerEtat(partie);
-        if (etat == EN_COURS) partie->tour = 2 - partie->tour + 1;
+        partie->tour = 2 - partie->tour + 1;
     }
     if (etat != EGALITE) printf("Gagnant :\n%s", etat == 1 ? "J1" : "J2");
     else printf("Égalité !");
