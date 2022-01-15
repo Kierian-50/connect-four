@@ -323,3 +323,64 @@ void testJouerCoup() {
     printf("\n---------------------------------\n");
 
 }
+
+void testEvaluationCase() {
+    Partie partie;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie.plateau[i][j] = VIDE;
+        }
+    }
+
+    partie.plateau[5][1] = J1;
+    partie.plateau[5][2] = J1;
+    partie.plateau[4][2] = J2;
+    partie.plateau[5][0] = J2;
+    afficher(&partie);
+
+    partie.tour = J2;
+    printf("J2 : \n");
+    printf("Evaluation 5, 0 : %d\n", evaluationCase(&partie, 5, 0));
+    printf("Evaluation 4, 2 : %d\n\n", evaluationCase(&partie, 4, 2));
+
+    partie.tour = J1;
+    printf("J1 : \n");
+    printf("Evaluation 5, 1 : %d\n", evaluationCase(&partie, 5, 1));
+    printf("Evaluation 5, 2 : %d\n\n", evaluationCase(&partie, 5, 2));
+
+    partie.tour = J2;
+    printf("vide : \n");
+    printf("Evaluation 5, 3 : %d\n", evaluationCase(&partie, 5, 3));
+    printf("Evaluation 4, 1 : %d\n", evaluationCase(&partie, 4, 1));
+    printf("Evaluation 4, 0 : %d\n", evaluationCase(&partie, 4, 0));
+    printf("Evaluation 4, 3 : %d\n", evaluationCase(&partie, 4, 3));
+    printf("Evaluation 3, 3 : %d\n", evaluationCase(&partie, 3, 3));
+    printf("Evaluation 2, 3 : %d\n", evaluationCase(&partie, 2, 3));
+    printf("Evaluation 4, 4 : %d\n", evaluationCase(&partie, 4, 4));
+    printf("Evaluation 5, 5 : %d\n", evaluationCase(&partie, 5, 5));
+    printf("Evaluation 0, 4 : %d\n\n", evaluationCase(&partie, 0, 4));
+
+
+    printf("Evaluation : %d", evaluation(&partie));
+}
+
+void testEvaluation() {
+    Partie partie;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie.plateau[i][j] = VIDE;
+        }
+    }
+
+    partie.plateau[5][1] = J1;
+    partie.plateau[5][2] = J1;
+    partie.plateau[4][2] = J2;
+    partie.plateau[5][0] = J2;
+    afficher(&partie);
+
+    partie.tour = J2;
+
+    printf("Evaluation : %d", evaluation(&partie));
+}

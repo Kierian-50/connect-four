@@ -7,3 +7,5 @@
 void testAfficher();
 void testCalculerEtat();
 void testJouerCoup();
+void testEvaluationCase();
+void testEvaluation();

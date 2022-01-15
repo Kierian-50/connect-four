@@ -313,23 +313,23 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     // Check horizontally
     // ------------------
 
-    while (opponent != partie->plateau[x][y+1] &&
-            y+1 >= 0 &&
-            y+1 <= 6 &&
+    while (opponent != partie->plateau[x][y] &&
+            y >= 0 &&
+            y <= 6 &&
             nb_pawn < 4) {
         y++;
         nb_pawn++;
     }
 
     x = ligne;
-    y = colonne;
+    y = colonne-1; // Avoid to count two time the original square
     total_pawn_line += nb_pawn;
     nb_pawn = 0;
 
-    while (opponent != partie->plateau[x][y+1] &&
-            y-1 >= 0 &&
-            y-1 <= 6 &&
-            nb_pawn < 4) {
+    while (opponent != partie->plateau[x][y] &&
+            y >= 0 &&
+            y <= 6 &&
+            nb_pawn < 3) {
         y--;
         nb_pawn++;
     }
@@ -348,17 +348,17 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     // Check vertically
     // ------------------
 
-    while (opponent != partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 5 && nb_pawn < 4) {
+    while (opponent != partie->plateau[x][y] && x >= 0 && x <= 5 && nb_pawn < 4) {
         x++;
         nb_pawn++;
     }
 
-    x = ligne;
+    x = ligne-1; // Avoid to count two time the original square
     y = colonne;
     total_pawn_line += nb_pawn;
     nb_pawn = 0;
 
-    while (opponent != partie->plateau[x-1][y] && x-1 >= 0 && x-1 <= 5 && nb_pawn < 4) {
+    while (opponent != partie->plateau[x][y] && x >= 0 && x <= 5 && nb_pawn < 3) {
         x--;
         nb_pawn++;
     }
@@ -377,28 +377,28 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     // Check diagonally
     // ------------------
     // x++ y++
-    while (opponent != partie->plateau[x+1][y+1] &&
-           x+1 >= 0 &&
-           y+1 >= 0 &&
-           x+1 <= 5 &&
-           y+1 <= 6 &&
+    while (opponent != partie->plateau[x][y] &&
+           x >= 0 &&
+           y >= 0 &&
+           x <= 5 &&
+           y <= 6 &&
            nb_pawn < 4) {
         x++;
         y++;
         nb_pawn++;
     }
 
-    x = ligne;
-    y = colonne;
+    x = ligne-1; // Avoid to count two time the original square
+    y = colonne-1; // Avoid to count two time the original square
     total_pawn_line += nb_pawn;
     nb_pawn = 0;
 
-    while (opponent != partie->plateau[x-1][y-1] &&
-           x-1 >= 0 &&
-           y-1 >= 0 &&
-           x-1 <= 5 &&
-           y-1 <= 6 &&
-           nb_pawn < 4) {
+    while (opponent != partie->plateau[x][y] &&
+           x >= 0 &&
+           y >= 0 &&
+           x <= 5 &&
+           y <= 6 &&
+           nb_pawn < 3) {
         x--;
         y--;
         nb_pawn++;
@@ -415,29 +415,29 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     y = colonne;
 
     // y-- x++
-    while (opponent != partie->plateau[x+1][y-1] &&
-           x+1 >= 0 &&
-           y-1 >= 0 &&
-           x+1 <= 5 &&
-           y-1 <= 6 &&
+    while (opponent != partie->plateau[x][y] &&
+           x >= 0 &&
+           y >= 0 &&
+           x <= 5 &&
+           y <= 6 &&
            nb_pawn < 4) {
         x++;
         y--;
         nb_pawn++;
     }
 
-    x = ligne;
-    y = colonne;
+    x = ligne - 1;
+    y = colonne + 1 ;
     total_pawn_line += nb_pawn;
     nb_pawn = 0;
 
 
-    while (opponent != partie->plateau[x-1][y+1] &&
-           x-1 >= 0 &&
-           y+1 >= 0 &&
-           x-1 <= 5 &&
-           y+1 <= 6 &&
-           nb_pawn < 4) {
+    while (opponent != partie->plateau[x][y] &&
+           x >= 0 &&
+           y >= 0 &&
+           x <= 5 &&
+           y <= 6 &&
+           nb_pawn < 3) {
         x--;
         y++;
         nb_pawn++;
