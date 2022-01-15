@@ -1,5 +1,10 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 //Les différents états possibles d'une partie
 typedef enum{EN_COURS, VICTOIRE_J1, VICTOIRE_J2, EGALITE} Etat;
 //Les valeurs possibles d'une case dans la grille
@@ -38,3 +43,6 @@ Etat calculerEtat(Partie* partie);
 **/
 int bouclePrincipale(Partie* partie);
 
+void nettoyageRessources(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t);
+void initSDL();
+SDL_Surface dessinerGrille();

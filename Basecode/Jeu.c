@@ -1,8 +1,5 @@
 #include "Jeu.h"
 #include "IA.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 /**
  * Allows to display current game
@@ -262,32 +259,40 @@ Etat calculerEtat(Partie* partie) {
 /**
  * Allows to start a game loop : player choose to play against another player or against IA,
  * then loop start and each player play until one of them win
- * @param partie - game that start
- * @return
+ * @param partie - game to start
+ * @return 0 when game is finished
  */
 int bouclePrincipale(Partie* partie) {
+
+    initSDL();
+
     printf("1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu :");
     int mode;
     scanf("%d", &mode);
+
     Etat etat = calculerEtat(partie);
+
     while (etat == EN_COURS) {
         printf("\n%sLe joueur %d joue !\n\n",  partie->tour == 1 ? "\x1B[31m" : "\x1B[34m", partie->tour);
+
         if (mode == 2 || (mode == 1 && partie->tour == 2)) {
             int colonne;
             int coup = -1;
+
             do {
-                if (coup == -1) {
+                if (coup == -1)
                     printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton :", "\x1B[0m");
-                } else {
+                else
                     printf("Veuillez choisir une colonne non remplie entre 1 et 7 :");
-                }
                 scanf("%d", &colonne);
                 coup = jouerCoup(partie, colonne);
-                if (coup) afficher(partie);
+                if (coup)
+                    afficher(partie);
             } while (coup != 1);
         } else {
             int highestEval = 0;
             int columnToPlay = 0;
+
             for (int j = 0; j < 7; j++) {
                 for (int i = 0; i < 6; i++) {
                     if (partie->plateau[0][j] == VIDE && (partie->plateau[i][j] != VIDE || i == 5)) {
@@ -300,15 +305,84 @@ int bouclePrincipale(Partie* partie) {
                     }
                 }
             }
+
             printf("IA joue : %d\n", columnToPlay);
             jouerCoup(partie, columnToPlay);
             afficher(partie);
         }
+
         etat = calculerEtat(partie);
         partie->tour = 2 - partie->tour + 1;
     }
-    if (etat != EGALITE) printf("Gagnant :\n%s", etat == 1 ? "J1" : "J2");
-    else printf("Égalité !");
+
+    if (etat != EGALITE)
+        printf("Gagnant :\n%s", etat == 1 ? "J1" : "J2");
+    else
+        printf("Égalité !");
     //printf("%s", strcat("%s a gagné la partie !", partie->tour == 1 ? "J1" : "J2"));
-    return 0;
+    int ret = 0;
+    do {
+        scanf("\n1. Rejouer\n2. Quitter\nChoisissez une action :%d", &ret);
+    } while (ret - 1 < 0 || ret - 1 > 1);
+    return ret;
+}
+
+// Graphical functions
+
+void nettoyageRessources(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t) {
+    SDL_Log("Erreur : %s\n", SDL_GetError());
+    if (t != NULL)
+        SDL_DestroyTexture(t);
+    if (r != NULL)
+        SDL_DestroyRenderer(r);
+    if (w != NULL)
+        SDL_DestroyWindow(w);
+    SDL_Quit();
+    exit(EXIT_FAILURE);
+}
+
+void initSDL() {
+
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    SDL_Surface *picture[6][7];
+    SDL_Texture *texture = NULL;
+    SDL_Rect dest_rect = {0, 0, 640, 480};
+
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        nettoyageRessources(NULL, NULL, NULL);
+
+    window = SDL_CreateWindow("Connect 4", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+    if (window == NULL)
+        nettoyageRessources(window, NULL, NULL);
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    if (renderer == NULL)
+        nettoyageRessources(window, renderer, NULL);
+
+    for (int x = 0; x < 6; x++) {
+        for (int y = 0; y < 7; y++) {
+            picture[x][y] = SDL_LoadBMP("../images/grid_overlay.bmp");
+
+            texture = SDL_CreateTextureFromSurface(renderer, picture[x][y]);
+            SDL_FreeSurface(picture[x][y]);
+            if (texture == NULL)
+                nettoyageRessources(window, renderer, NULL);
+            if (SDL_QueryTexture(texture, NULL, NULL, &dest_rect.w, &dest_rect.h) != 0 || SDL_RenderCopy(renderer, texture, NULL, &dest_rect) != 0)
+                nettoyageRessources(window, renderer, texture);
+        }
+    }
+//    if (picture == NULL)
+//        nettoyageRessources(window, renderer, NULL);
+
+//    texture = SDL_CreateTextureFromSurface(renderer, picture);
+//    SDL_FreeSurface(picture);
+//    if (texture == NULL)
+//        nettoyageRessources(window, renderer, NULL);
+//    if (SDL_QueryTexture(texture, NULL, NULL, &dest_rect.w, &dest_rect.h) != 0 || SDL_RenderCopy(renderer, texture, NULL, &dest_rect) != 0)
+//        nettoyageRessources(window, renderer, texture);
+
+    SDL_RenderPresent(renderer);
+    SDL_Delay(5000);
+
 }
