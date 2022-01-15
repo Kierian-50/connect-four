@@ -457,7 +457,20 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
 }
 
 int evaluation(Partie* partie){
-    return 0; // tOdO
+    int score = 0;
+    int currentPlayer = partie->tour;
+    for (int i=0; i<6; i++){
+        for (int ii=0; ii<7; ii++){
+            if (partie->plateau[i][ii] == partie->tour) { // IA
+                score += evaluationCase(partie, i, ii);
+            } else if (partie->plateau[i][ii] == 2 - partie->tour + 1) {
+//                partie->tour = 2 - partie->tour + 1;
+                score -= evaluationCase(partie, i, ii);
+//                partie->tour = currentPlayer;
+            }
+        }
+    }
+    return score;
 }
 
 Arbre* minmax(Partie* partie, int profondeur, int IA){
