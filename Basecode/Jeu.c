@@ -36,7 +36,7 @@ void afficher(Partie* partie) {
  * @param colonne - column of the game in which move is placed
  * @return 0 if column is invalid or 1
  */
-int jouerCoup(Partie* partie, int colonne) {
+int jouerCoup(Partie* partie, int colonne) { // TODO demander à Matéo s'il gère que la colonne est pleine
     int ret = 0;
     if (colonne >= 1 && colonne <= 7 && partie->plateau[0][colonne - 1] == VIDE) {
         colonne = colonne - 1;

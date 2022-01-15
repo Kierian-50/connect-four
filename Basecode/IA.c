@@ -457,7 +457,7 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
 }
 
 int evaluation(Partie* partie){
-    return 0;
+    return 0; // tOdO
 }
 
 Arbre* minmax(Partie* partie, int profondeur, int IA){
@@ -466,7 +466,7 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
     arbre->partie = partie;
 
     Etat state = calculerEtat(partie);
-
+    // Check that the game is over
     if (state != EN_COURS) {
         if (state == VICTOIRE_J1) {
             arbre->score = 1000;
@@ -475,28 +475,33 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
             arbre->score = -1000;
             return arbre;
         } else if (state == EGALITE) {
-
+            arbre->score = 0;
+            return arbre;
         }
     }
 
     if (profondeur == 0) {
-        return NULL;
+        arbre->score = evaluation(partie);
+        return arbre;
     }
 
     for (int i=0; i<7; i++) {
-        Arbre a;
-        Partie* p = copierPartie(partie);
+        Partie* pCopy = copierPartie(partie);
 
-        a.partie = p;
-
-        jouerCoup(partie, i);
-
+        if (jouerCoup(pCopy, i) == 1) {
+            arbre->enfants[i] = minmax(pCopy, profondeur-1, 1-IA);
+            if (arbre->score < arbre->enfants[i]->score) {
+                arbre->score = arbre->enfants[i]->score;
+            } else {
+                pCopy = NULL; // TODO est-ce que ça détruit bien la variable ?
+            }
+        }
 
     }
 
-    return NULL;
+    return arbre;
 }
 
 void detruireArbre(Arbre* arbre){
-    
+    // ToDo
 }
