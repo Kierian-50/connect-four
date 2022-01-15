@@ -18,7 +18,7 @@ int main(int argc, char** argv){
 //    testCalculerEtat();
 
     int tour = 2;
-    do{
+    do {
         partie.tour = tour;
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){

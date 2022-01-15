@@ -43,6 +43,4 @@ Etat calculerEtat(Partie* partie);
 **/
 int bouclePrincipale(Partie* partie);
 
-void nettoyageRessources(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t);
-void initSDL();
-SDL_Surface dessinerGrille();
+int boucleGraphique(Partie *partie);
