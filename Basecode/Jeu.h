@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 //Les différents états possibles d'une partie
 typedef enum{EN_COURS, VICTOIRE_J1, VICTOIRE_J2, EGALITE} Etat;
@@ -42,5 +43,5 @@ Etat calculerEtat(Partie* partie);
 *Renvoie 1 si les joueurs veulent rejouer, 0 sinon
 **/
 int bouclePrincipale(Partie* partie);
-
-int boucleGraphique(Partie *partie);
+void jouerCoupIA(Partie* partie, int interface);
+Etat boucleGraphique(Partie *partie, int mode);

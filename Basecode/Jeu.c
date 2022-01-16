@@ -264,72 +264,101 @@ Etat calculerEtat(Partie* partie) {
  */
 int bouclePrincipale(Partie* partie) {
 
-    boucleGraphique(partie);
-
-    printf("1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu :");
+    // Select game mode
+    printf("\n1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu : ");
     int mode;
     scanf("%d", &mode);
+    while (mode != 1 && mode != 2) {
+        printf("Veuillez sélectionner l'option 1 ou 2 : ");
+        scanf("%d", &mode);
+    }
+
+    // Select interface
+    printf("\n1. Jouer en mode graphique\n2. Jouer en mode console\nChoisissez une interface : ");
+    int interface;
+    scanf("%d", &interface);
+    while (interface != 1 && interface != 2) {
+        printf("Veuillez sélectionner l'option 1 ou 2 : ");
+        scanf("%d", &interface);
+    }
 
     Etat etat = calculerEtat(partie);
 
-    while (etat == EN_COURS) {
-        printf("\n%sLe joueur %d joue !\n\n",  partie->tour == 1 ? "\x1B[31m" : "\x1B[33m", partie->tour);
+    if (interface == 2) {
+        while (etat == EN_COURS) {
+            printf("\n%sLe joueur %d joue !\n\n", partie->tour == 1 ? "\x1B[31m" : "\x1B[33m", partie->tour);
 
-        if (mode == 2 || (mode == 1 && partie->tour == 2)) {
-            int colonne;
-            int coup = -1;
+            if (mode == 2 || (mode == 1 && partie->tour == 2)) {
+                int colonne;
+                int coup = -1;
 
-            do {
-                if (coup == -1)
-                    printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton :", "\x1B[0m");
-                else
-                    printf("Veuillez choisir une colonne non remplie entre 1 et 7 :");
-                scanf("%d", &colonne);
-                coup = jouerCoup(partie, colonne);
-                if (coup)
-                    afficher(partie);
-            } while (coup != 1);
-        } else {
-            int highestEval = 0;
-            int columnToPlay = 0;
-
-            for (int j = 0; j < 7; j++) {
-                for (int i = 0; i < 6; i++) {
-                    if (partie->plateau[0][j] == VIDE && (partie->plateau[i][j] != VIDE || i == 5)) {
-                        int eval = evaluationCase(partie, i == 5 ? i : i - 1, j);
-                        if (eval > highestEval) {
-                            highestEval = eval;
-                            columnToPlay = j+1;
-                        }
-                        break;
-                    }
-                }
+                do {
+                    if (coup == -1)
+                        printf("%sChoisissez la colonne dans laquelle vous souhaitez inserer votre jeton : ", "\x1B[0m");
+                    else
+                        printf("Veuillez choisir une colonne non remplie entre 1 et 7 : ");
+                    scanf("%d", &colonne);
+                    coup = jouerCoup(partie, colonne);
+                    if (coup)
+                        afficher(partie);
+                } while (coup != 1);
+            } else {
+                jouerCoupIA(partie, interface);
             }
 
-            printf("IA joue : %d\n", columnToPlay);
-            jouerCoup(partie, columnToPlay);
-            afficher(partie);
+            etat = calculerEtat(partie);
+            partie->tour = 2 - partie->tour + 1;
         }
-
-        etat = calculerEtat(partie);
-        partie->tour = 2 - partie->tour + 1;
+    } else {
+        etat = boucleGraphique(partie, mode);
     }
 
-    if (etat != EGALITE)
-        printf("Gagnant :\n%s", etat == 1 ? "J1" : "J2");
-    else
+    // Display winner
+    if (etat == VICTOIRE_J1 || etat == VICTOIRE_J2)
+        printf("\nGagnant :\n%s", etat == 1 ? "\x1B[31mJ1\x1B[0m" : "\x1B[33mJ2\x1B[0m");
+    else if (etat == EGALITE)
         printf("Égalité !");
-    //printf("%s", strcat("%s a gagné la partie !", partie->tour == 1 ? "J1" : "J2"));
+
+    // Ask to replay
+    printf("\n\n1. Quitter\n2. Rejouer\nChoisissez une action : ");
     int ret = 0;
-    do {
-        scanf("\n1. Rejouer\n2. Quitter\nChoisissez une action :%d", &ret);
-    } while (ret - 1 < 0 || ret - 1 > 1);
-    return ret;
+    scanf("%d", &ret);
+    while (ret != 1 && ret != 2) {
+        printf("Veuillez sélectionner l'option 1 ou 2 : ");
+        scanf("%d", &ret);
+    }
+    return (ret - 1);
+}
+
+void jouerCoupIA(Partie* partie, int interface) {
+    int highestEval = 0;
+    int columnToPlay = 0;
+
+    for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 6; i++) {
+            if (partie->plateau[0][j] == VIDE && (partie->plateau[i][j] != VIDE || i == 5)) {
+                int eval = evaluationCase(partie, i == 5 ? i : i - 1, j);
+                if (eval > highestEval) {
+                    highestEval = eval;
+                    columnToPlay = j+1;
+                }
+                break;
+            }
+        }
+    }
+
+    jouerCoup(partie, columnToPlay);
+    if (interface == 2) {
+        afficher(partie);
+        printf("IA a joué : %d\n", columnToPlay);
+    } else {
+         // Wait before IA play in graphical mode (so, player can see the new move)
+         sleep(1);
+     }
 }
 
 // Graphical interface
-
-int boucleGraphique(Partie *partie) {
+Etat boucleGraphique(Partie *partie, int mode) {
 
     int grid_cell_size = 36;
     int grid_width = 7;
@@ -354,14 +383,14 @@ int boucleGraphique(Partie *partie) {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Initialize SDL: %s",SDL_GetError());
-        return EXIT_FAILURE;
+        return -1;
     }
 
     SDL_Window *window;
     SDL_Renderer *renderer;
     if (SDL_CreateWindowAndRenderer(window_width, window_height, 0, &window,&renderer) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Create window and renderer: %s", SDL_GetError());
-        return EXIT_FAILURE;
+        return -1;
     }
 
     SDL_SetWindowTitle(window, "Connect 4");
@@ -379,7 +408,8 @@ int boucleGraphique(Partie *partie) {
             switch (event.type) {
                 case SDL_MOUSEBUTTONDOWN:
                     // Place a new pawn at the clicked case.
-                    coup = jouerCoup(partie, event.motion.x/grid_cell_size + 1);
+                    if (mode == 2 || (mode == 1 && partie->tour == 2))
+                        coup = jouerCoup(partie, event.motion.x/grid_cell_size + 1);
                     break;
                 case SDL_MOUSEMOTION:
                     // Select current case on which we will ad an hover effect
@@ -418,6 +448,11 @@ int boucleGraphique(Partie *partie) {
             SDL_RenderFillRect(renderer, &hover);
         }
 
+        if (mode == 1 && partie->tour == 1) {
+            coup = 1;
+            jouerCoupIA(partie, 1);
+        }
+
         // Draw grid pawns.
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
@@ -447,5 +482,6 @@ int boucleGraphique(Partie *partie) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    return etat;
 
 }
