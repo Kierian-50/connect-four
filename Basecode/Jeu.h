@@ -15,6 +15,7 @@ typedef struct {
     Case plateau[6][7]; //la grille de jeu, la ligne 0 est la plus proche du sol
     int tour; //1 ou 2, le joueur dont c'est le tour
 } Partie;
+
 /**
 *Partie 1 : moteur du jeu
 **/
@@ -58,3 +59,12 @@ int playIAShot(Partie* partie, int interface);
  * @return state of the game : EGALITE, VICTOIRE_J1 or VICTOIRE_J2
  */
 Etat graphicalLoop(Partie *partie, int mode);
+
+/**
+ * This function allows to draw a filled circle point per point
+ * @param renderer scene on which we render our circle
+ * @param x horizontal coordinate of center of circle
+ * @param y vertical coordinate of center of circle
+ * @param radius radius of the circle
+ */
+void drawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);

@@ -13,11 +13,19 @@ void* loopMusicTheme() {
         playMusic(MUSIC_THEME_PATH);
 }
 
+/**
+ * Allows to play winner's music
+ * @return @void
+ */
 void* playWinMusic() {
     playMusic(WIN_MUSIC_PATH);
     SDL_Quit();
 }
 
+/**
+ * Allows to play loser's music
+ * @return @void
+ */
 void* playLoseMusic() {
     playMusic(LOSE_MUSIC_PATH);
     SDL_Quit();

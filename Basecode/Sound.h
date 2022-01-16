@@ -14,7 +14,16 @@
  */
 void* loopMusicTheme();
 
+/**
+ * Allows to play winner's music
+ * @return @void
+ */
 void* playWinMusic();
+
+/**
+ * Allows to play loser's music
+ * @return @void
+ */
 void* playLoseMusic();
 
 /**

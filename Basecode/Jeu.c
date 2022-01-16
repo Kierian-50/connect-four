@@ -361,11 +361,10 @@ int playIAShot(Partie* partie, int interface) {
         }
     }
 
-    printf("Colonne jouée : %d", columnToPlay);
     int coup = jouerCoup(partie, columnToPlay);
     if (interface == 2) {
         afficher(partie);
-        printf("IA a joué : %d\n", columnToPlay);
+        printf("IA a joué : %d", columnToPlay);
     }
     return coup;
 }
@@ -379,7 +378,7 @@ int playIAShot(Partie* partie, int interface) {
 Etat graphicalLoop(Partie *partie, int mode) {
 
     // define grid cell size, grid width, grid height, window width and window height
-    int grid_cell_size = 50;
+    int grid_cell_size = 100;
     int grid_width = 7;
     int grid_height = 6;
     int window_width = (grid_width * grid_cell_size) + 1;
@@ -474,7 +473,6 @@ Etat graphicalLoop(Partie *partie, int mode) {
         // Play IA shot
         if (mode == 1 && partie->tour == 1) {
             coup = playIAShot(partie, 1);
-            printf("Placement ia : %d\n", coup);
         }
 
         // Draw grid pawns.
@@ -484,12 +482,12 @@ Etat graphicalLoop(Partie *partie, int mode) {
                     SDL_SetRenderDrawColor(renderer, p1_color.r, p1_color.g, p1_color.b, p1_color.a);
                     pawn.x = j * grid_cell_size;
                     pawn.y = i * grid_cell_size;
-                    SDL_RenderFillRect(renderer, &pawn);
+                    drawCircle(renderer, pawn.x + 50, pawn.y + 50, 40);
                 } else if (partie->plateau[i][j] == J2) {
                     SDL_SetRenderDrawColor(renderer, p2_color.r, p2_color.g, p2_color.b, p2_color.a);
                     pawn.x = j * grid_cell_size;
                     pawn.y = i * grid_cell_size;
-                    SDL_RenderFillRect(renderer, &pawn);
+                    drawCircle(renderer, pawn.x + 50, pawn.y + 50, 40);
                 }
             }
         }
@@ -508,4 +506,22 @@ Etat graphicalLoop(Partie *partie, int mode) {
     SDL_DestroyWindow(window);
     return etat;
 
+}
+
+/**
+ * This function allows to draw a filled circle point per point
+ * @param renderer scene on which we render our circle
+ * @param x horizontal coordinate of center of circle
+ * @param y vertical coordinate of center of circle
+ * @param radius radius of the circle
+ */
+void drawCircle(SDL_Renderer *renderer, int x, int y, int radius) {
+    for (int w = 0; w < radius * 2; w++) {
+        for (int h = 0; h < radius * 2; h++) {
+            int dx = radius - w;
+            int dy = radius - h;
+            if ((dx*dx + dy*dy) <= (radius * radius))
+                SDL_RenderDrawPoint(renderer, x + dx, y + dy);
+        }
+    }
 }
