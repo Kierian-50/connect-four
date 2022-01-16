@@ -496,7 +496,7 @@ int evaluation(Partie* partie){
 Arbre* minmax(Partie* partie, int profondeur, int IA){
 
     Arbre *arbre = (Arbre*) calloc(1, sizeof(arbre));
-    arbre->partie = partie;
+    arbre->partie = copierPartie(partie);
 
     Etat state = calculerEtat(partie);
     // Check that the game is over
@@ -514,12 +514,16 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
     }
 
     if (profondeur == 0) {
+        afficher(partie);
         arbre->score = evaluation(partie);
+        printf("Evaluation : %d ; \n", arbre->score);
         return arbre;
     }
 
-    for (int i=0; i<7; i++) {
+    for (int i=0; i<=7; i++) {
         Partie* pCopy = copierPartie(partie);
+        //TODO change player dans partie
+        //TODO coprendre ce qu'il se passe quand victoire
 
         if (jouerCoup(pCopy, i) == 1) {
             arbre->enfants[i] = minmax(pCopy, profondeur-1, 1-IA);
@@ -529,7 +533,6 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
                 free(pCopy);
             }
         }
-
     }
 
     return arbre;
@@ -538,7 +541,7 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
 void detruireArbre(Arbre* arbre){
     for (int i=0; i<7; i++) {
         detruireArbre(arbre->enfants[i]);
-        free(arbre->enfants[i]);
+        free(arbre);
     }
     free(arbre);
 }

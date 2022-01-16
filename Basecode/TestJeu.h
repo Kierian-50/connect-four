@@ -9,3 +9,4 @@ void testCalculerEtat();
 void testJouerCoup();
 void testEvaluationCase();
 void testEvaluation();
+void testMinMax();

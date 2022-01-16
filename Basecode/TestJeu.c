@@ -581,3 +581,31 @@ void testEvaluation() {
     if (evaluation(&secondGame) == 8) printf("\nEvaluation de la seconde partie : OK\n");
     else printf("\nEvaluation de la seconde partie : ERREUR\n");
 }
+
+void testMinMax() {
+    Partie firstGame;
+    firstGame.tour = J2;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            firstGame.plateau[i][j] = VIDE;
+        }
+    }
+
+    firstGame.plateau[5][1] = J1;
+    firstGame.plateau[5][2] = J1;
+    firstGame.plateau[4][2] = J2;
+    firstGame.plateau[5][0] = J2;
+
+    afficher(&firstGame);
+
+    Arbre* arbre = minmax(&firstGame, 5, 1);
+
+    afficher(arbre->partie);
+    printf("\n%d\n", arbre->score);
+
+//    for (int i=0; i<7; i++) {
+//        printf("%d", arbre->enfants[i]->score);
+//    }
+//    detruireArbre(arbre);
+}
