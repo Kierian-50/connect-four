@@ -16,6 +16,8 @@ int main(int argc, char** argv){
 //    testAfficher();
 //    testJouerCoup();
 //    testCalculerEtat();
+//    testEvaluationCase();
+//    testEvaluation();
 
     int tour = 2;
     do {

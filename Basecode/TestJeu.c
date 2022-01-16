@@ -3,8 +3,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * This method allows to test the display board method's (Afficher). The test isn't automated.
+ * Cette méthode permet de tester la méthode d'affichage du tableau de jeu via la méthode afficher. Le test n'est pas
+ * automatisé.
+ */
 void testAfficher() {
-    // TEST afficher
+
+    printf("===================================\n");
+    printf("testAfficher\n");
+    printf("===================================\n\n");
+
+    // init game to test
     Partie emptyGame;
 
     emptyGame.tour = 0;
@@ -14,7 +24,7 @@ void testAfficher() {
         }
     }
 
-    printf("Affichage du tableau vide : \n");
+    printf("Affichage d'un tableau vide : \n");
     afficher(&emptyGame);
     printf("\n---------------------------------\n");
 
@@ -59,16 +69,95 @@ void testAfficher() {
         }
     }
 
-    printf("Affichage d'un tableau de jeu : \n");
+    printf("Affichage d'un tableau de jeu aléatoire : \n");
     afficher(&realGame);
+    printf("\nFin du test d'Afficher\n");
     printf("\n---------------------------------\n");
 
 }
 
-void testCalculerEtat() { // TODO use if and correct limit case with full board
+/**
+ * This method allows to test the method which placed a pawn in a column of the board. This test is automated.
+ * Cette méthode permet de tester la méthode de placement de pions dans une colonne d'une tableau. Ce test est
+ * automatisé.
+ */
+void testJouerCoup() {
 
-    printf("testCalculerEtat");
-    printf("Test cas vertical de J2 gagnant après quatre coup\n");
+    printf("===================================\n");
+    printf("testJouerCoup\n");
+    printf("===================================\n\n");
+
+    printf("Test du jeu d'un coup invalide :\n");
+
+    Partie partie;
+    partie.tour = 1;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coupInvalide = jouerCoup(&partie, -2);
+    if (coupInvalide == 0) printf("Le coup joué n'a pas été retenu car il est invalide.\n");
+    else printf("Le coup joué est invalide mais a été retenu.\n");
+    afficher(&partie);
+    printf("\n---------------------------------\n");
+
+    printf("Test du jeu d'un coup valide :\n");
+
+    Partie partie2;
+    partie2.tour = 1;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie2.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coupValide = jouerCoup(&partie2, 2);
+    if (coupValide == 1) printf("Le coup joué a été retenu car il est valide.\n");
+    else printf("Le coup joué est valide mais n'a pas été retenu.\n");
+    afficher(&partie2);
+    printf("\n---------------------------------\n");
+
+    printf("Test de l'empilement des jetons sur une colonne :\n");
+
+    Partie partie3;
+    partie3.tour = 1;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            partie3.plateau[i][j] = VIDE;
+        }
+    }
+
+    int coup1 = jouerCoup(&partie3, 2);
+    int coup2 = jouerCoup(&partie3, 2);
+    int coup3 = jouerCoup(&partie3, 2);
+    afficher(&partie3);
+    printf("\n---------------------------------\n");
+
+    printf("Test d'un coup sur une colonne pleine :\n");
+    jouerCoup(&partie3, 2);
+    jouerCoup(&partie3, 2);
+    jouerCoup(&partie3, 2);
+
+    if (jouerCoup(&partie3, 2) == 0) printf("Le coup joué n'a pas été retenu car il est invalide.\n");
+    else printf("Le coup joué est invalide mais a été retenu.\n");
+    afficher(&partie3);
+    printf("\n---------------------------------\n");
+
+
+}
+
+/**
+ * This method allows to test the method which calculate the state of the game. This test is automated.
+ * Cette methode permet de tester la méthode qui calcule l'état d'une partie. Le test est automatisé.
+ */
+void testCalculerEtat() {
+
+    printf("===================================\n");
+    printf("testCalculerEtat\n");
+    printf("===================================\n\n");
+    printf("Test cas vertical de J2 gagnant après quatre coups\n\n");
 
     Partie gameVertical;
 
@@ -78,24 +167,33 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
             gameVertical.plateau[i][j] = VIDE;
         }
     }
-    afficher(&gameVertical);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
+    if (calculerEtat(&gameVertical) == 0) printf("Test vertical en cours : OK\n");
+    else {
+        printf("Test vertical en cours : ERREUR\n");
+        afficher(&gameVertical);
+    }
+
     gameVertical.plateau[0][0] = J2;
-    afficher(&gameVertical);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
     gameVertical.plateau[0][1] = J2;
-    afficher(&gameVertical);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
     gameVertical.plateau[0][2] = J2;
-    afficher(&gameVertical);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
+
+    if (calculerEtat(&gameVertical) == 0) printf("Test vertical en cours : OK\n");
+    else {
+        printf("Test vertical en cours : ERREUR\n");
+        afficher(&gameVertical);
+    }
+
     gameVertical.plateau[0][3] = J2;
-    afficher(&gameVertical);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameVertical));
 
+    // Victory of J2
+    if (calculerEtat(&gameVertical) == 2) printf("Test vertical, victoire J2 : OK\n");
+    else {
+        printf("Test vertical, victoire J2 : ERREUR\n");
+        afficher(&gameVertical);
+    }
 
-    printf("------------------------------------------------\n");
-    printf("Test cas horizontal de J1 gagnant après quatre coup\n");
+    printf("\n------------------------------------------------\n\n");
+    printf("Test cas horizontal de J1 gagnant après cinq coups\n");
 
     Partie gameHorizontal;
 
@@ -105,24 +203,34 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
             gameHorizontal.plateau[i][j] = VIDE;
         }
     }
-    afficher(&gameHorizontal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
+
+    if (calculerEtat(&gameHorizontal) == 0) printf("Test horizontale en cours : OK\n");
+    else {
+        printf("Test horizontale en cours : ERREUR\n");
+        afficher(&gameHorizontal);
+    }
 
     gameHorizontal.plateau[0][0] = J1;
-    afficher(&gameHorizontal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
     gameHorizontal.plateau[1][0] = J1;
-    afficher(&gameHorizontal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
     gameHorizontal.plateau[2][0] = J1;
-    afficher(&gameHorizontal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
-    gameHorizontal.plateau[3][0] = J1;
-    afficher(&gameHorizontal);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameHorizontal));
+    gameHorizontal.plateau[4][0] = J1;
 
-    printf("----------------------------------");
-    printf("Test cas diagonal de J2 gagnant après quatre coup\n");
+    if (calculerEtat(&gameHorizontal) == 0) printf("Test horizontale en cours : OK\n");
+    else {
+        printf("Test horizontale en cours : ERREUR\n");
+        afficher(&gameHorizontal);
+    }
+
+    gameHorizontal.plateau[3][0] = J1;
+
+    if (calculerEtat(&gameHorizontal) == 1) printf("Test horizontale, Victoire J1 : OK\n");
+    else {
+        printf("Test horizontale, Victoire J1 : ERREUR\n");
+        afficher(&gameHorizontal);
+    }
+
+    printf("\n----------------------------------\n\n");
+    printf("Test cas diagonal de J2 gagnant après quatre coups\n");
 
     Partie gameDiag;
 
@@ -132,25 +240,109 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
             gameDiag.plateau[i][j] = VIDE;
         }
     }
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+
+    if (calculerEtat(&gameDiag) == 0) printf("Test diagonal en cours : OK\n");
+    else {
+        printf("Test diagonal en cours : ERREUR\n");
+        afficher(&gameDiag);
+    }
 
     gameDiag.plateau[0][0] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
     gameDiag.plateau[1][1] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
     gameDiag.plateau[2][2] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
+
+    if (calculerEtat(&gameDiag) == 0) printf("Test diagonal en cours : OK\n");
+    else {
+        printf("Test diagonal en cours : ERREUR\n");
+        afficher(&gameDiag);
+    }
+
     gameDiag.plateau[3][3] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
 
-    printf("------------------------------------------------\n");
+    if (calculerEtat(&gameDiag) == 1) printf("Test diagonal, Victoire J1 : OK\n");
+    else {
+        printf("Test diagonal, Victoire J1 : ERREUR\n");
+        afficher(&gameDiag);
+    }
 
-    printf("Test cas tableau plein\n");
+    printf("\n------------------------------------------------\n\n");
+    printf("Test cas diagonal de J1 gagnant après quatre coups\n");
+
+    Partie gameBugDiag;
+
+    gameBugDiag.tour = 0;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            gameBugDiag.plateau[i][j] = VIDE;
+        }
+    }
+
+    if (calculerEtat(&gameBugDiag) == 0) printf("Test diagonal en cours : OK\n");
+    else {
+        printf("Test diagonal en cours : ERREUR\n");
+        afficher(&gameBugDiag);
+    }
+
+    gameBugDiag.plateau[5][0] = J1;
+    gameBugDiag.plateau[4][1] = J1;
+    gameBugDiag.plateau[3][2] = J1;
+
+    if (calculerEtat(&gameBugDiag) == 0) printf("Test diagonal en cours : OK\n");
+    else {
+        printf("Test diagonal en cours : ERREUR\n");
+        afficher(&gameBugDiag);
+    }
+
+    gameBugDiag.plateau[2][3] = J1;
+
+    if (calculerEtat(&gameBugDiag) == 1) printf("Test diagonal, Victoire J1 : OK\n");
+    else {
+        printf("Test diagonal, Victoire J1 : ERREUR\n");
+        afficher(&gameBugDiag);
+    }
+
+
+    printf("\n----------------------------------\n\n");
+    printf("Test cas vertical de J2 gagnant contre J1\n");
+
+    Partie gameBug;
+
+    gameDiag.tour = 0;
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            gameBug.plateau[i][j] = VIDE;
+        }
+    }
+
+    if (calculerEtat(&gameBug) == 0) printf("Test vertical 2 en cours : OK\n");
+    else {
+        printf("Test vertical 2 en cours : ERREUR\n");
+        afficher(&gameBug);
+    }
+
+    gameBug.plateau[5][0] = J2;
+    gameBug.plateau[5][1] = J1;
+    gameBug.plateau[4][0] = J2;
+    gameBug.plateau[4][1] = J1;
+    gameBug.plateau[3][0] = J2;
+    gameBug.plateau[3][1] = J1;
+
+    if (calculerEtat(&gameBug) == 0) printf("Test vertical 2 en cours : OK\n");
+    else {
+        printf("Test vertical 2 en cours : ERREUR\n");
+        afficher(&gameBug);
+    }
+
+    gameBug.plateau[2][0] = J2;
+
+    if (calculerEtat(&gameBug) == 2) printf("Test vertical 2, Victoire J2 : OK\n");
+    else {
+        printf("Test vertical 2, Victoire J2: ERREUR\n");
+        afficher(&gameBug);
+    }
+
+    printf("\n----------------------------------\n\n");
+    printf("Test cas égalité\n");
 
     Partie gameFull;
 
@@ -204,127 +396,41 @@ void testCalculerEtat() { // TODO use if and correct limit case with full board
             }
         }
     }
-    afficher(&gameFull);
+    gameFull.plateau[5][1] = J1;
+    gameFull.plateau[5][2] = J1;
+    gameFull.plateau[5][4] = J2;
+    gameFull.plateau[5][5] = J2;
 
-    printf("Etat de la game : %d \n", calculerEtat(&gameFull));
 
-    printf("----------------------------------");
-    printf("Test cas diagonal de J2 gagnant après quatre coup\n");
-
-    Partie gameBug;
-
-    gameDiag.tour = 0;
-    for (int i=0; i<6; i++){
-        for (int j=0; j<7; j++){
-            gameDiag.plateau[i][j] = VIDE;
-        }
+    if (calculerEtat(&gameFull) == 3) printf("Test egalite : OK\n");
+    else {
+        printf("Test egalite: ERREUR\n");
+        afficher(&gameFull);
     }
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-
-    gameDiag.plateau[5][0] = J2;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[5][1] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[4][0] = J2;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[4][1] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[3][0] = J2;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[3][1] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[2][0] = J2;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-    gameDiag.plateau[2][1] = J1;
-    afficher(&gameDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameDiag));
-
-    printf("----------------------------------");
-    printf("Test cas diagonal de J2 gagnant après quatre coup\n");
-
-    Partie gameBugDiag;
-
-    gameBugDiag.tour = 0;
-    for (int i=0; i<6; i++){
-        for (int j=0; j<7; j++){
-            gameBugDiag.plateau[i][j] = VIDE;
-        }
-    }
-    gameBugDiag.plateau[5][0] = J1;
-    afficher(&gameBugDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
-    gameBugDiag.plateau[4][1] = J1;
-    afficher(&gameBugDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
-    gameBugDiag.plateau[3][2] = J1;
-    afficher(&gameBugDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
-    gameBugDiag.plateau[2][3] = J1;
-    afficher(&gameBugDiag);
-    printf("Etat de la game : %d `\n", calculerEtat(&gameBugDiag));
-}
-
-void testJouerCoup() {
-
-    printf("Test du jeu d'un coup invalide :\n");
-
-    Partie partie;
-    partie.tour = 1;
-    for (int i=0; i<6; i++){
-        for (int j=0; j<7; j++){
-            partie.plateau[i][j] = VIDE;
-        }
-    }
-
-    int coupInvalide = jouerCoup(&partie, -2);
-    if (coupInvalide == 0) printf("Le coup joué n'a pas été retenu car il est invalide.\n");
-    else printf("Le coup joué est invalide mais a été retenu.\n");
-    afficher(&partie);
-    printf("\n---------------------------------\n");
-
-    printf("Test du jeu d'un coup valide :\n");
-
-    Partie partie2;
-    partie2.tour = 1;
-    for (int i=0; i<6; i++){
-        for (int j=0; j<7; j++){
-            partie2.plateau[i][j] = VIDE;
-        }
-    }
-
-    int coupValide = jouerCoup(&partie2, 2);
-    if (coupValide == 1) printf("Le coup joué a été retenu car il est valide.\n");
-    else printf("Le coup joué est valide mais n'a pas été retenu.\n");
-    afficher(&partie2);
-    printf("\n---------------------------------\n");
-
-    printf("Test de l'empilement des jetons sur une colonne :\n");
-
-    Partie partie3;
-    partie3.tour = 1;
-    for (int i=0; i<6; i++){
-        for (int j=0; j<7; j++){
-            partie3.plateau[i][j] = VIDE;
-        }
-    }
-
-    int coup1 = jouerCoup(&partie3, 2);
-    int coup2 = jouerCoup(&partie3, 2);
-    int coup3 = jouerCoup(&partie3, 2);
-    afficher(&partie3);
-    printf("\n---------------------------------\n");
 
 }
 
+/**
+ * This method allows to test the method which is able to calculate the possibilities from a square. This test is
+ * automated. I took an example that we did during the lesson.
+ * Cette méthode permet de tester la méthode qui est capable de calculer les possibilités depuis une case. Ce test est
+ * automatisé. J'ai pris un exemple que nous avons fait dans le cours.
+ *
+ * [ ][ ][ ][ ][ ][ ][ ]
+ * [ ][ ][ ][ ][ ][ ][ ]
+ * [ ][ ][ ][ ][ ][ ][ ]
+ * [ ][ ][ ][ ][ ][ ][ ]
+ * [ ][ ][X][ ][ ][ ][ ]
+ * [X][O][O][ ][ ][ ][ ]
+ *
+ */
 void testEvaluationCase() {
+
+    printf("===================================\n");
+    printf("testEvaluationCase\n");
+    printf("===================================\n\n");
+    printf("Test cas vertical de J2 gagnant après quatre coups\n\n");
+
     Partie partie;
 
     for (int i=0; i<6; i++){
@@ -337,50 +443,141 @@ void testEvaluationCase() {
     partie.plateau[5][2] = J1;
     partie.plateau[4][2] = J2;
     partie.plateau[5][0] = J2;
+
     afficher(&partie);
 
     partie.tour = J2;
-    printf("J2 : \n");
-    printf("Evaluation 5, 0 : %d\n", evaluationCase(&partie, 5, 0));
-    printf("Evaluation 4, 2 : %d\n\n", evaluationCase(&partie, 4, 2));
+    printf("\nCalcule des pions de J2 : \n");
+
+    if (evaluationCase(&partie, 5, 0) == 2) printf("Pion (5,0) : OK\n");
+    else printf("Pion (5,0) : ERREUR\n");
+
+    if (evaluationCase(&partie, 4, 2) == 6) printf("Pion (4,2) : OK\n");
+    else printf("Pion (4,2) : ERREUR\n");
 
     partie.tour = J1;
-    printf("J1 : \n");
-    printf("Evaluation 5, 1 : %d\n", evaluationCase(&partie, 5, 1));
-    printf("Evaluation 5, 2 : %d\n\n", evaluationCase(&partie, 5, 2));
+    printf("\nCalcule des pions de J1 : \n");
+
+    if (evaluationCase(&partie, 5, 1) == 2) printf("Pion (5,1) : OK\n");
+    else printf("Pion (5,1) : ERREUR\n");
+
+    if (evaluationCase(&partie, 5, 2) == 3) printf("Pion (5,2) : OK\n");
+    else printf("Pion (5,2) : ERREUR\n");
 
     partie.tour = J2;
-    printf("vide : \n");
-    printf("Evaluation 5, 3 : %d\n", evaluationCase(&partie, 5, 3));
-    printf("Evaluation 4, 1 : %d\n", evaluationCase(&partie, 4, 1));
-    printf("Evaluation 4, 0 : %d\n", evaluationCase(&partie, 4, 0));
-    printf("Evaluation 4, 3 : %d\n", evaluationCase(&partie, 4, 3));
-    printf("Evaluation 3, 3 : %d\n", evaluationCase(&partie, 3, 3));
-    printf("Evaluation 2, 3 : %d\n", evaluationCase(&partie, 2, 3));
-    printf("Evaluation 4, 4 : %d\n", evaluationCase(&partie, 4, 4));
-    printf("Evaluation 5, 5 : %d\n", evaluationCase(&partie, 5, 5));
-    printf("Evaluation 0, 4 : %d\n\n", evaluationCase(&partie, 0, 4));
+    printf("\nCalcul des cases vides vu par J2 : \n");
 
+    if (evaluationCase(&partie, 5, 3) == 4) printf("Case (5,3) : OK\n");
+    else printf("Case (5,3) : ERREUR\n");
 
-    printf("Evaluation : %d", evaluation(&partie));
+    if (evaluationCase(&partie, 4, 1) == 5) printf("Case (5,3) : OK\n");
+    else printf("Case (5,3) : ERREUR\n");
+
+    if (evaluationCase(&partie, 4, 0) == 4) printf("Case (4,0) : OK\n");
+    else printf("Case (4,0) : ERREUR\n");
+
+    if (evaluationCase(&partie, 4, 3) == 9) printf("Case (4,3) : OK\n");
+    else printf("Case (4,3) : ERREUR\n");
+
+    if (evaluationCase(&partie, 3, 3) == 12) printf("Case (3,3) : OK\n");
+    else printf("Case (3,3) : ERREUR\n");
+
+    if (evaluationCase(&partie, 2, 3) == 13) printf("Case (2,3) : OK\n");
+    else printf("Case (2,3) : ERREUR\n");
+
+    if (evaluationCase(&partie, 4, 4) == 8) printf("Case (4,4) : OK\n");
+    else printf("Case (4,4) : ERREUR\n");
+
+    if (evaluationCase(&partie, 5, 5) == 3) printf("Case (5,5) : OK\n");
+    else printf("Case (5,5) : ERREUR\n");
+
+    if (evaluationCase(&partie, 0, 4) == 5) printf("Case (0,4) : OK\n");
+    else printf("Case (0,4) : ERREUR\n");
+
+    printf("\n\nAdd a J1 pawn in (5,3) to test the possibility of win\n\n");
+
+    partie.plateau[5][3] = J1;
+
+    afficher(&partie);
+    printf("\n");
+
+    // For J2, he've to avoid the win of the opponent.
+    // Pour J2, il a à éviter la victoire de l'adversaire.
+    if (evaluationCase(&partie, 5, 4) == 900) printf("J2 : Case (5,4) : OK\n");
+    else printf("J2 : Case (5,4) : ERREUR\n");
+
+    partie.tour = J1;
+    // For J1, he've to win
+    // Pour J1, il a gagné
+    if (evaluationCase(&partie, 5, 4) == 1000) printf("J1 : Case (5,4) : OK\n");
+    else printf("J2 : Case (5,4) : ERREUR\n");
+
 }
 
+/**
+ * This method allows to test the method which is able to evaluate a game. The test is automated.
+ * Cette méthode permet de tester la méthode qui permet d'évaluer une partie. Le test est automatisé.
+ */
 void testEvaluation() {
-    Partie partie;
+
+    printf("===================================\n");
+    printf("testEvaluation\n");
+    printf("===================================\n\n");
+
+    Partie firstGame;
 
     for (int i=0; i<6; i++){
         for (int j=0; j<7; j++){
-            partie.plateau[i][j] = VIDE;
+            firstGame.plateau[i][j] = VIDE;
         }
     }
 
-    partie.plateau[5][1] = J1;
-    partie.plateau[5][2] = J1;
-    partie.plateau[4][2] = J2;
-    partie.plateau[5][0] = J2;
-    afficher(&partie);
+    firstGame.plateau[5][1] = J1;
+    firstGame.plateau[5][2] = J1;
+    firstGame.plateau[4][2] = J2;
+    firstGame.plateau[5][0] = J2;
 
-    partie.tour = J2;
+    afficher(&firstGame);
 
-    printf("Evaluation : %d", evaluation(&partie));
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][X][ ][ ][ ][ ]
+    // [X][O][O][ ][ ][ ][ ]
+    // => 3 for J2
+
+    firstGame.tour = J2;
+
+    if (evaluation(&firstGame) == 3) printf("Evaluation de la première partie : OK\n\n");
+    else printf("Evaluation de la première partie : ERREUR\n\n");
+
+
+    Partie secondGame;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            secondGame.plateau[i][j] = VIDE;
+        }
+    }
+
+    secondGame.plateau[5][1] = J1;
+    secondGame.plateau[5][2] = J1;
+    secondGame.plateau[4][2] = J2;
+    secondGame.plateau[5][3] = J2;
+
+    afficher(&secondGame);
+
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][ ][ ][ ][ ][ ]
+    // [ ][ ][X][ ][ ][ ][ ]
+    // [ ][O][O][X][ ][ ][ ]
+    // => 8 for J2
+
+    secondGame.tour = J2;
+
+    if (evaluation(&secondGame) == 8) printf("\nEvaluation de la seconde partie : OK\n");
+    else printf("\nEvaluation de la seconde partie : ERREUR\n");
 }

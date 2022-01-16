@@ -2,8 +2,9 @@
 #include "IA.h"
 
 /**
- * Allows to display current game
- * @param partie - game to display
+ * This method allows to diplay the current game past in parameter.
+ * Cette méthod permet d'afficher la partie courante passé en parametre.
+ * @param partie - Game to display | La partie à afficher.
  */
 void afficher(Partie* partie) {
     for (int i=0; i<6; i++){
@@ -28,12 +29,16 @@ void afficher(Partie* partie) {
 }
 
 /**
- * ALlows to play a move in a specific column.
- * @param partie - game on which we must place the move
- * @param colonne - column of the game in which move is placed
- * @return 0 if column is invalid or 1
+ * This method aLlows to play a move in a specific column.
+ * Cette méthode permet de jouer un mouvement dans une colonne particulière.
+ * @param partie - Game on which we must place the move.
+ *                 La partie sur laquelle on veut faire le mouvement.
+ * @param colonne - Column of the game in which the pawn is placed.
+ *                  La colonne dans laquelle on veut placer le pion.
+ * @return 0 if the placement is invalid else 1.
+ *         0 si le placement est invalide sinon 1.
  */
-int jouerCoup(Partie* partie, int colonne) { // TODO demander à Matéo s'il gère que la colonne est pleine
+int jouerCoup(Partie* partie, int colonne) {
     int ret = 0;
     if (colonne >= 1 && colonne <= 7 && partie->plateau[0][colonne - 1] == VIDE) {
         colonne = colonne - 1;
@@ -54,38 +59,13 @@ int jouerCoup(Partie* partie, int colonne) { // TODO demander à Matéo s'il gè
 }
 
 /**
- * Allows to check the state of the game (win, lose and egality)
- * @param partie game t
- * @return
+ * This method allows to check the state of the game (win, lose and egality).
+ * Cette méthode permet de vérifier l'état de la partie (gagné, perdu et égalité).
+ * @param partie - The game which we calculate the state.
+ *                 La partie sur laquelle on calcul l'état.
+ * @return An element of the enum Etat which says the state of the game.
+ *         Un element de l'énumération d'un Etat qui donne l'état de la partie.
  */
-
-//Etat calculerEtat(Partie* partie) {
-//    int ret = EN_COURS;
-//
-//    int joueurActuel = partie->tour == 1 ? J1 : J2;
-//
-//    for (int i = 0; i < 6; i++) {
-//        for (int j = 0; j < 7; j++) {
-//            if (j + 4 < 7 && joueurActuel == partie->plateau[i][j + 1] && joueurActuel == partie->plateau[i][j + 2] && joueurActuel == partie->plateau[i][j + 3] && joueurActuel == partie->plateau[i][j + 4]) {
-//                ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
-//            } else if (i + 4 < 6) {
-//                if (joueurActuel == partie->plateau[i + 1][j] && joueurActuel == partie->plateau[i + 2][j] && joueurActuel == partie->plateau[i + 3][j] && joueurActuel == partie->plateau[i + 4][j]) {
-//                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
-//                } else if (j + 4 < 7 && joueurActuel == partie->plateau[i + 1][j + 1] && joueurActuel == partie->plateau[i + 2][j + 2] && joueurActuel == partie->plateau[i + 3][j + 3] && joueurActuel == partie->plateau[i + 4][j + 4]) {
-//                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
-//                } else if (j - 4 >= 0 && joueurActuel == partie->plateau[i + 1][j - 1] && joueurActuel == partie->plateau[i + 2][j - 2] && joueurActuel == partie->plateau[i + 3][j - 3] && joueurActuel == partie->plateau[i + 4][j - 4]) {
-//                    ret = joueurActuel == J1 ? VICTOIRE_J1 : VICTOIRE_J2;
-//                }
-//
-//            }
-//            if (ret != EN_COURS) break;
-//        }
-//        if (ret != EN_COURS) break;
-//    }
-//
-//    return ret;
-//}
-
 Etat calculerEtat(Partie* partie) {
 
     int isBoardFull = 0; // 0 = True ; 1 = False
@@ -93,13 +73,19 @@ Etat calculerEtat(Partie* partie) {
     for (int i=0; i<6; i++){
         for (int ii=0; ii<7; ii++){
 
+            // Avoid to test the long test if the square is empty
+            // Moreover it will help to know if the game is draw.
+            // Evite de tester le long test si la case est vide
+            // De plus, ca aidera à savoir si la partie est égalité.
             if (partie->plateau[i][ii] != VIDE) {
 
                 int nb_pawn = 1;
                 int x = i;
                 int y = ii;
 
+                // ----------------------
                 // Check horizontally
+                // ----------------------
 
                 while (partie->plateau[i][ii] == partie->plateau[x][y+1] &&
                         y+1 >= 0 &&
@@ -133,7 +119,9 @@ Etat calculerEtat(Partie* partie) {
                     y = ii;
                 }
 
+                // ----------------------
                 // Check vertically
+                // ----------------------
 
                 while (partie->plateau[i][ii] == partie->plateau[x+1][y] && x+1 >= 0 && x+1 <= 5 && nb_pawn < 4) {
                     x++;
@@ -161,7 +149,9 @@ Etat calculerEtat(Partie* partie) {
                     y = ii;
                 }
 
+                // ----------------------
                 // Check diagonally x++ y++
+                // ----------------------
 
                 while (partie->plateau[i][ii] == partie->plateau[x+1][y+1] &&
                         x+1 >= 0 &&
@@ -176,7 +166,6 @@ Etat calculerEtat(Partie* partie) {
 
                 x = i;
                 y = ii;
-
 
                 while (partie->plateau[i][ii] == partie->plateau[x-1][y-1] &&
                         x-1 >= 0 &&
@@ -202,8 +191,9 @@ Etat calculerEtat(Partie* partie) {
                     y = ii;
                 }
 
+                // ----------------------
                 // Check y-- x++
-
+                // ----------------------
                 while (partie->plateau[i][ii] == partie->plateau[x+1][y-1] &&
                         x+1 >= 0 &&
                         y-1 >= 0 &&

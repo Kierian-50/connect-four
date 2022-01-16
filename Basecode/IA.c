@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * This method allows to copy a game past in parameter, recreate it in another memory location and return it.
+ * Cette méthode permet de copier une partie passée en parametre, la recréé dans un zutre emplacement mémoire et le
+ * retourne.
+ * @param partie - The game to copy | La partie à copier.
+ * @return The copy of the game | La copie de la partie.
+ */
 Partie* copierPartie(Partie* partie){
     Partie* p = calloc(1, sizeof(*partie));
     p->tour = partie->tour;
@@ -16,12 +23,19 @@ Partie* copierPartie(Partie* partie){
 }
 
 /**
- * Attention ! Ne fonctionne pour checker les pions du joueur courant car la case étant vide je me base
- * sur le joueur courant pour connaitre la couleur du pion qui sera joué sur la case vide.
- * @param partie
- * @param ligne
- * @param colonne
- * @return
+ * This method is able to count the score of a square. The square can be empty or with a pawn on it.
+ * Beware ! Work only to check the pawns of the current player because the square can be empty, so the code is based on
+ * the current player to know the color of the pawn that can be play.
+ * Cette méthode permet de compter le score d'une case. La case peut être vide ou avec un pion sur elle.
+ * Attention ! Ne fonctionne que pour compter les pions du joueur courant car la case pouvant être vide,le code se base
+ * sur le joueur courant pour connaitre la couleur du pion qui sera joué.
+ * @param partie - The game | La partie.
+ * @param ligne - The line where the square is | La case où la case est.
+ * @param colonne - The column where the square is | La colonne où la case est.
+ * @return 1000 : If the move cause the win of the player | Si le mouvement cause la victoire du joueur.
+ *         900 : If the movement avoid the win of the opponent | Si le mouvement empêche la victoire de l'adversaire.
+ *         Else : The number of possibilities for the current player on this square.
+ *         Sinon : Le nombre de possibilité pour le joueur courant sur le carré.
  */
 int evaluationCase(Partie* partie, int ligne, int colonne){
 
@@ -456,6 +470,12 @@ int evaluationCase(Partie* partie, int ligne, int colonne){
     return total_possibility;
 }
 
+/**
+ * This method allows to give a number to a game according to the possition of the pawn.
+ * Cette méthode permet de donner un nombre à une partie selon la position des pions.
+ * @param partie The game to evaluate | La partie à évaluer.
+ * @return The score of the game | Le score de la partie.
+ */
 int evaluation(Partie* partie){
     int score = 0;
     int currentPlayer = partie->tour;
@@ -464,9 +484,9 @@ int evaluation(Partie* partie){
             if (partie->plateau[i][ii] == partie->tour) { // IA
                 score += evaluationCase(partie, i, ii);
             } else if (partie->plateau[i][ii] == 2 - partie->tour + 1) {
-//                partie->tour = 2 - partie->tour + 1;
+                partie->tour = 2 - partie->tour + 1;
                 score -= evaluationCase(partie, i, ii);
-//                partie->tour = currentPlayer;
+                partie->tour = currentPlayer;
             }
         }
     }
@@ -506,7 +526,7 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
             if (arbre->score < arbre->enfants[i]->score) {
                 arbre->score = arbre->enfants[i]->score;
             } else {
-                pCopy = NULL; // TODO est-ce que ça détruit bien la variable ?
+                free(pCopy);
             }
         }
 
@@ -516,5 +536,9 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
 }
 
 void detruireArbre(Arbre* arbre){
-    // ToDo
+    for (int i=0; i<7; i++) {
+        detruireArbre(arbre->enfants[i]);
+        free(arbre->enfants[i]);
+    }
+    free(arbre);
 }
