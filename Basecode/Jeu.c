@@ -1,5 +1,6 @@
 #include "Jeu.h"
 #include "IA.h"
+#include "Sound.h"
 
 /**
  * This method allows to diplay the current game past in parameter.
@@ -247,22 +248,27 @@ Etat calculerEtat(Partie* partie) {
 }
 
 /**
- * Allows to start a game loop : player choose to play against another player or against IA,
- * then loop start and each player play until one of them win
+ * Allows to start a game loop : start music, display menus and start loop.
+ * Player choose to play against another player or against IA, then he can choose to play in graphical or in console mode.
+ * After those, the loop start and each player play until one of them win.
  * @param partie - game to start
- * @return 0 when game is finished
+ * @return 1 if players want to replay or 0
  */
 int bouclePrincipale(Partie* partie) {
 
-    SDL_Init(SDL_INIT_AUDIO);
-    SDL_AudioSpec wavSpec;
-    Uint32 wavLength;
-    Uint8 *wavBuffer;
+//    SDL_Init(SDL_INIT_AUDIO);
+//    SDL_AudioSpec wavSpec;
+//    Uint32 wavLength;
+//    Uint8 *wavBuffer;
+//
+//    SDL_LoadWAV("../sounds/zen_japan.wav", &wavSpec, &wavBuffer, &wavLength);
+//    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+//    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+//    SDL_PauseAudioDevice(deviceId, 0);
 
-    SDL_LoadWAV("../sounds/zen_japan.wav", &wavSpec, &wavBuffer, &wavLength);
-    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
-    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
-    SDL_PauseAudioDevice(deviceId, 0);
+    // create a new thread to play music theme in loop
+    pthread_t threadId;
+    pthread_create(&threadId, NULL, loopMusicTheme, NULL);
 
     // Select game mode
     printf("\n1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu : ");
@@ -273,7 +279,7 @@ int bouclePrincipale(Partie* partie) {
         scanf("%d", &mode);
     }
 
-    // Select interface
+    // Select interface mode
     printf("\n1. Jouer en mode graphique\n2. Jouer en mode console\nChoisissez une interface : ");
     int interface;
     scanf("%d", &interface);
@@ -303,14 +309,14 @@ int bouclePrincipale(Partie* partie) {
                         afficher(partie);
                 } while (coup != 1);
             } else {
-                jouerCoupIA(partie, interface);
+                playIAShot(partie, interface);
             }
 
             etat = calculerEtat(partie);
             partie->tour = 2 - partie->tour + 1;
         }
     } else {
-        etat = boucleGraphique(partie, mode);
+        etat = graphicalLoop(partie, mode);
     }
 
     // Display winner
@@ -319,7 +325,7 @@ int bouclePrincipale(Partie* partie) {
     else if (etat == EGALITE)
         printf("Égalité !");
 
-    // Ask to replay
+    // Ask for replay
     printf("\n\n1. Quitter\n2. Rejouer\nChoisissez une action : ");
     int ret = 0;
     scanf("%d", &ret);
@@ -328,14 +334,20 @@ int bouclePrincipale(Partie* partie) {
         scanf("%d", &ret);
     }
 
-    SDL_CloseAudioDevice(deviceId);
-    SDL_FreeWAV(wavBuffer);
-    SDL_Quit();
+//    SDL_CloseAudioDevice(deviceId);
+//    SDL_FreeWAV(wavBuffer);
 
+    // Stop video + audio device stream and quit game loop
+    SDL_Quit();
     return (ret - 1);
 }
 
-void jouerCoupIA(Partie* partie, int interface) {
+/**
+ * This function allows to play an IA shot in function of score returned by evaluationCase
+ * @param partie game on which IA must play his shot
+ * @param interface interface chosen by player : display IA shot if we are in console mode
+ */
+void playIAShot(Partie* partie, int interface) {
     int highestEval = 0;
     int columnToPlay = 0;
 
@@ -356,19 +368,21 @@ void jouerCoupIA(Partie* partie, int interface) {
     if (interface == 2) {
         afficher(partie);
         printf("IA a joué : %d\n", columnToPlay);
-    } else {
-         // Wait before IA play in graphical mode (so, player can see the new move)
-         sleep(1);
-     }
+    }
 }
 
-// Graphical interface
-Etat boucleGraphique(Partie *partie, int mode) {
+/**
+ * This function allows to display a game in graphical mode thanks to SDL2 library
+ * @param partie game to display
+ * @param mode chosen mode : IA vs Player or Player vs Player
+ * @return state of the game : EGALITE, VICTOIRE_J1 or VICTOIRE_J2
+ */
+Etat graphicalLoop(Partie *partie, int mode) {
 
-    int grid_cell_size = 36;
+    // define grid cell size, grid width, grid height, window width and window height
+    int grid_cell_size = 50;
     int grid_width = 7;
     int grid_height = 6;
-
     int window_width = (grid_width * grid_cell_size) + 1;
     int window_height = (grid_height * grid_cell_size) + 1;
 
@@ -378,19 +392,22 @@ Etat boucleGraphique(Partie *partie, int mode) {
     // Create a mouse hover cursor
     SDL_Rect hover = {pawn.x, pawn.y, grid_cell_size,grid_cell_size};
 
+    // Define color used
     SDL_Color grid_background_color = {22, 22, 22, 255};
-    SDL_Color grid_line_color = {44, 44, 44, 255}; // Dark grey
+    SDL_Color grid_line_color = {44, 44, 44, 255};
     SDL_Color grid_hover_color = {44, 44, 44, 255};
     // Red
     SDL_Color p1_color = {255, 0, 0, 255};
     // Yellow
     SDL_Color p2_color = {255, 255, 0, 255};
 
+    // Init video device
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Initialize SDL: %s",SDL_GetError());
         return -1;
     }
 
+    // Init window
     SDL_Window *window;
     SDL_Renderer *renderer;
     if (SDL_CreateWindowAndRenderer(window_width, window_height, 0, &window,&renderer) < 0) {
@@ -406,6 +423,7 @@ Etat boucleGraphique(Partie *partie, int mode) {
 
     Etat etat = calculerEtat(partie);
 
+    // Start event loop
     while (!quit && etat == EN_COURS) {
         SDL_Event event;
         int coup = 0;
@@ -454,9 +472,10 @@ Etat boucleGraphique(Partie *partie, int mode) {
             SDL_RenderFillRect(renderer, &hover);
         }
 
+        // Play IA shot
         if (mode == 1 && partie->tour == 1) {
             coup = 1;
-            jouerCoupIA(partie, 1);
+            playIAShot(partie, 1);
         }
 
         // Draw grid pawns.
@@ -485,6 +504,7 @@ Etat boucleGraphique(Partie *partie, int mode) {
         SDL_RenderPresent(renderer);
     }
 
+    // Close window
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     return etat;

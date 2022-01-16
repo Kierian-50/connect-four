@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <pthread.h>
 
 //Les différents états possibles d'une partie
 typedef enum{EN_COURS, VICTOIRE_J1, VICTOIRE_J2, EGALITE} Etat;
@@ -43,5 +43,18 @@ Etat calculerEtat(Partie* partie);
 *Renvoie 1 si les joueurs veulent rejouer, 0 sinon
 **/
 int bouclePrincipale(Partie* partie);
-void jouerCoupIA(Partie* partie, int interface);
-Etat boucleGraphique(Partie *partie, int mode);
+
+/**
+ * This function allows to play an IA shot in function of score returned by evaluationCase
+ * @param partie game on which IA must play his shot
+ * @param interface interface chosen by player : display IA shot if we are in console mode
+ */
+void playIAShot(Partie* partie, int interface);
+
+/**
+ * This function allows to display a game in graphical mode thanks to SDL2 library
+ * @param partie game to display
+ * @param mode chosen mode : IA vs Player or Player vs Player
+ * @return state of the game : EGALITE, VICTOIRE_J1 or VICTOIRE_J2
+ */
+Etat graphicalLoop(Partie *partie, int mode);
