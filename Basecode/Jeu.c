@@ -264,6 +264,16 @@ Etat calculerEtat(Partie* partie) {
  */
 int bouclePrincipale(Partie* partie) {
 
+    SDL_Init(SDL_INIT_AUDIO);
+    SDL_AudioSpec wavSpec;
+    Uint32 wavLength;
+    Uint8 *wavBuffer;
+
+    SDL_LoadWAV("../sounds/zen_japan.wav", &wavSpec, &wavBuffer, &wavLength);
+    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+    SDL_PauseAudioDevice(deviceId, 0);
+
     // Select game mode
     printf("\n1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu : ");
     int mode;
@@ -327,6 +337,11 @@ int bouclePrincipale(Partie* partie) {
         printf("Veuillez sélectionner l'option 1 ou 2 : ");
         scanf("%d", &ret);
     }
+
+    SDL_CloseAudioDevice(deviceId);
+    SDL_FreeWAV(wavBuffer);
+    SDL_Quit();
+
     return (ret - 1);
 }
 
@@ -431,6 +446,7 @@ Etat boucleGraphique(Partie *partie, int mode) {
                     break;
             }
         }
+
         // Draw grid background.
         SDL_SetRenderDrawColor(renderer, grid_background_color.r, grid_background_color.g,grid_background_color.b, grid_background_color.a);
         SDL_RenderClear(renderer);
@@ -481,7 +497,6 @@ Etat boucleGraphique(Partie *partie, int mode) {
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_Quit();
     return etat;
 
 }
