@@ -493,6 +493,17 @@ int evaluation(Partie* partie){
     return score;
 }
 
+/**
+ * This method is a maximization method, which is able to maximize the chance to choose the best square among every
+ * possibilities. It will create every possibilities of movement according to the depth past in parameter and we'll
+ * choose in the game loop the column which has 1000 or we will choose the maximum score to maximazise the change of
+ * success.
+ * @param partie The game which we will apply the algo | La partie sur laquelle appliquer l'algo.
+ * @param profondeur The depth : The number of moves | La profondeur : Le nombre de mouvement.
+ * @param IA 0 if the IA don't play, 1 : if it plays | 0 Si l'IA ne joue pas et 1 si elle joue.
+ * @return The tree with the new elements on the children.
+ *         L'arbre avec les nouveaux elements sur les enfants.
+ */
 Arbre* minmax(Partie* partie, int profondeur, int IA){
 
     Arbre *arbre = (Arbre*) calloc(1, sizeof(arbre));
@@ -533,6 +544,11 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
     return arbre;
 }
 
+/**
+ * This method allows to free the memory by deleting the arbre variable.
+ * Cette méthode permet de liberer la mémoire en supprimant l'arbre en parametre.
+ * @param arbre The variable to delete | La variable à supprimer.
+ */
 void detruireArbre(Arbre* arbre){
     free(arbre);
 }

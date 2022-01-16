@@ -582,7 +582,19 @@ void testEvaluation() {
     else printf("\nEvaluation de la seconde partie : ERREUR\n");
 }
 
+/**
+ * This method allows to test the method minmax in three use case one possible win, one possible loose and a normal
+ * move.
+ * Cette méthode permet de tester la methode minmax dans trois cas d'utilisation : une victoire potentielle, une défaite
+ * potentielle et un movement normal.
+ */
 void testMinMax() {
+
+    printf("===================================\n");
+    printf("testMinMax\n");
+    printf("===================================\n\n");
+    printf("Test dans un cas où J1 va gagner :\n");
+
     Partie firstGame;
     firstGame.tour = J2;
 
@@ -597,38 +609,88 @@ void testMinMax() {
     firstGame.plateau[5][3] = J1;
     firstGame.plateau[4][2] = J2;
     firstGame.plateau[5][0] = J2;
+    firstGame.plateau[4][0] = J2;
 
-    Arbre* arbre = minmax(&firstGame, 6, 1);
-
-    afficher(arbre->partie);
-
-    printf("\n%d\n", arbre->score);
+    Arbre* arbreUn = minmax(&firstGame, 6, 1);
+    afficher(&firstGame);
 
     int colonne = -1;
     for (int i=1; i<=7; i++) {
-        printf("%d ; ", arbre->enfants[i]->score);
-        if (arbre->enfants[i]->score == 1000) {
-            printf("\njouer colonne en priorité i : %d\n", i);
+        printf("colonne : %d, score : %d\n", i, arbreUn->enfants[i]->score);
+        if (arbreUn->enfants[i]->score == 1000) {
             colonne = i;
-             break;
-        } else if (arbre->enfants[i]->score == -1000) {
-            printf("\njouer colonne échapper la victoire en priorité i : %d\n", i);
-            colonne = i;
-            break;
         }
     }
 
-    if (colonne == -1){
-        // TRouver colonne avec score max
-        int max = -10000;
-        for (int i=1; i<=7; i++) {
-            if (max <= colonne) {
-                colonne = i;
-            }
+    if (colonne == 5) printf("On voit que la colonne 5 est à 1000 en jouant cette casse, l'ia gagne : OK\n");
+    else printf("On voit que la colonne 5 n'est pas à 1000 or en jouant cette casse, l'ia gagne : ERREUR\n");
+
+    detruireArbre(arbreUn);
+
+    printf("\n-------------------------------------------------\n");
+    printf("Test dans un cas où J1 va gagner :\n\n");
+
+    Partie secondGame;
+    secondGame.tour = J2;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            secondGame.plateau[i][j] = VIDE;
         }
     }
 
-    printf("Colonne à jouer : %d ", colonne);
+    secondGame.plateau[5][1] = J2;
+    secondGame.plateau[5][2] = J2;
+    secondGame.plateau[5][3] = J2;
+    secondGame.plateau[4][2] = J1;
+    secondGame.plateau[5][0] = J1;
 
-    detruireArbre(arbre);
+
+    Arbre* arbreDeux = minmax(&secondGame, 6, 0);
+    afficher(&secondGame);
+
+    colonne = -1;
+    for (int i=1; i<=7; i++) {
+        printf("colonne : %d, score : %d\n", i, arbreDeux->enfants[i]->score);
+        if (arbreDeux->enfants[i]->score == -1000) {
+            colonne = i;
+        }
+    }
+
+    if (colonne == 5) printf("On voit que la colonne 5 est à -1000 en jouant cette casse, l'ia empeche la "
+                             "défaite : OK\n");
+    else printf("On voit que la colonne 5 est à -1000 en jouant cette casse, l'ia gagne : ERREUR\n");
+
+    detruireArbre(arbreDeux);
+
+    printf("\n-------------------------------------------------\n");
+    printf("Test dans un cas où J1 va gagner :\n\n");
+
+    Partie thirdGame;
+    thirdGame.tour = J2;
+
+    for (int i=0; i<6; i++){
+        for (int j=0; j<7; j++){
+            thirdGame.plateau[i][j] = VIDE;
+        }
+    }
+
+    thirdGame.plateau[5][1] = J2;
+    thirdGame.plateau[5][2] = J2;
+    thirdGame.plateau[4][2] = J1;
+    thirdGame.plateau[5][0] = J1;
+
+
+    Arbre* arbreTrois = minmax(&thirdGame, 1, 1);
+    afficher(&thirdGame);
+    printf("\nScore de chaque pion qui se trouverait dans les différentes colonnes :\n");
+
+    for (int i=1; i<=7; i++) {
+        printf("colonne : %d, score : %d\n", i, arbreTrois->enfants[i]->score);
+    }
+
+    printf("On se retrouve dans le cas de l'évaluation de chaque position possible du pion à travers les 7 "
+           "colonnes\n");
+
+    detruireArbre(arbreTrois);
 }
