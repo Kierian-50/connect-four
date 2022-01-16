@@ -594,18 +594,41 @@ void testMinMax() {
 
     firstGame.plateau[5][1] = J1;
     firstGame.plateau[5][2] = J1;
+    firstGame.plateau[5][3] = J1;
     firstGame.plateau[4][2] = J2;
     firstGame.plateau[5][0] = J2;
 
-    afficher(&firstGame);
-
-    Arbre* arbre = minmax(&firstGame, 5, 1);
+    Arbre* arbre = minmax(&firstGame, 6, 1);
 
     afficher(arbre->partie);
+
     printf("\n%d\n", arbre->score);
 
-//    for (int i=0; i<7; i++) {
-//        printf("%d", arbre->enfants[i]->score);
-//    }
-//    detruireArbre(arbre);
+    int colonne = -1;
+    for (int i=1; i<=7; i++) {
+        printf("%d ; ", arbre->enfants[i]->score);
+        if (arbre->enfants[i]->score == 1000) {
+            printf("\njouer colonne en priorité i : %d\n", i);
+            colonne = i;
+             break;
+        } else if (arbre->enfants[i]->score == -1000) {
+            printf("\njouer colonne échapper la victoire en priorité i : %d\n", i);
+            colonne = i;
+            break;
+        }
+    }
+
+    if (colonne == -1){
+        // TRouver colonne avec score max
+        int max = -10000;
+        for (int i=1; i<=7; i++) {
+            if (max <= colonne) {
+                colonne = i;
+            }
+        }
+    }
+
+    printf("Colonne à jouer : %d ", colonne);
+
+    detruireArbre(arbre);
 }
