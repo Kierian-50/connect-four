@@ -5,12 +5,17 @@
 #include <SDL.h>
 
 #define MUSIC_THEME_PATH "../sounds/zen_japan.wav"
+#define WIN_MUSIC_PATH "../sounds/win.wav"
+#define LOSE_MUSIC_PATH "../sounds/lose.wav"
 
 /**
  * This function allow to play music theme in loop
  * @return @void
  */
 void* loopMusicTheme();
+
+void* playWinMusic();
+void* playLoseMusic();
 
 /**
  * This function allows to play a music once

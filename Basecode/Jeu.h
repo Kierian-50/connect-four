@@ -49,7 +49,7 @@ int bouclePrincipale(Partie* partie);
  * @param partie game on which IA must play his shot
  * @param interface interface chosen by player : display IA shot if we are in console mode
  */
-void playIAShot(Partie* partie, int interface);
+int playIAShot(Partie* partie, int interface);
 
 /**
  * This function allows to display a game in graphical mode thanks to SDL2 library

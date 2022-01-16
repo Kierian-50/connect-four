@@ -19,8 +19,8 @@ int main(int argc, char** argv){
 //    testEvaluationCase();
 //    testEvaluation();
 
-    int tour = 2;
     do {
+        int tour = 2;
         partie.tour = tour;
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){

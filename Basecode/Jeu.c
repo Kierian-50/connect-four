@@ -256,16 +256,6 @@ Etat calculerEtat(Partie* partie) {
  */
 int bouclePrincipale(Partie* partie) {
 
-//    SDL_Init(SDL_INIT_AUDIO);
-//    SDL_AudioSpec wavSpec;
-//    Uint32 wavLength;
-//    Uint8 *wavBuffer;
-//
-//    SDL_LoadWAV("../sounds/zen_japan.wav", &wavSpec, &wavBuffer, &wavLength);
-//    SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
-//    int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
-//    SDL_PauseAudioDevice(deviceId, 0);
-
     // create a new thread to play music theme in loop
     pthread_t threadId;
     pthread_create(&threadId, NULL, loopMusicTheme, NULL);
@@ -319,11 +309,23 @@ int bouclePrincipale(Partie* partie) {
         etat = graphicalLoop(partie, mode);
     }
 
+    // Stop music theme loop and close audio device
+    pthread_cancel(threadId);
+    SDL_Quit();
+
     // Display winner
-    if (etat == VICTOIRE_J1 || etat == VICTOIRE_J2)
+    if (etat == VICTOIRE_J1 || etat == VICTOIRE_J2) {
+        if (mode == 2 || (mode == 1 && etat == VICTOIRE_J2)) {
+            pthread_t win;
+            pthread_create(&win, NULL, playWinMusic, NULL);
+        } else if (mode == 1 && etat == VICTOIRE_J1) {
+            pthread_t lose;
+            pthread_create(&lose, NULL, playLoseMusic, NULL);
+        }
         printf("\nGagnant :\n%s", etat == 1 ? "\x1B[31mJ1\x1B[0m" : "\x1B[33mJ2\x1B[0m");
-    else if (etat == EGALITE)
+    } else if (etat == EGALITE) {
         printf("Égalité !");
+    }
 
     // Ask for replay
     printf("\n\n1. Quitter\n2. Rejouer\nChoisissez une action : ");
@@ -334,11 +336,6 @@ int bouclePrincipale(Partie* partie) {
         scanf("%d", &ret);
     }
 
-//    SDL_CloseAudioDevice(deviceId);
-//    SDL_FreeWAV(wavBuffer);
-
-    // Stop video + audio device stream and quit game loop
-    SDL_Quit();
     return (ret - 1);
 }
 
@@ -347,7 +344,7 @@ int bouclePrincipale(Partie* partie) {
  * @param partie game on which IA must play his shot
  * @param interface interface chosen by player : display IA shot if we are in console mode
  */
-void playIAShot(Partie* partie, int interface) {
+int playIAShot(Partie* partie, int interface) {
     int highestEval = 0;
     int columnToPlay = 0;
 
@@ -355,7 +352,7 @@ void playIAShot(Partie* partie, int interface) {
         for (int i = 0; i < 6; i++) {
             if (partie->plateau[0][j] == VIDE && (partie->plateau[i][j] != VIDE || i == 5)) {
                 int eval = evaluationCase(partie, i == 5 ? i : i - 1, j);
-                if (eval > highestEval) {
+                if (eval >= highestEval) {
                     highestEval = eval;
                     columnToPlay = j+1;
                 }
@@ -364,11 +361,13 @@ void playIAShot(Partie* partie, int interface) {
         }
     }
 
-    jouerCoup(partie, columnToPlay);
+    printf("Colonne jouée : %d", columnToPlay);
+    int coup = jouerCoup(partie, columnToPlay);
     if (interface == 2) {
         afficher(partie);
         printf("IA a joué : %d\n", columnToPlay);
     }
+    return coup;
 }
 
 /**
@@ -435,7 +434,7 @@ Etat graphicalLoop(Partie *partie, int mode) {
                         coup = jouerCoup(partie, event.motion.x/grid_cell_size + 1);
                     break;
                 case SDL_MOUSEMOTION:
-                    // Select current case on which we will ad an hover effect
+                    // Select current case on which we will add an hover effect
                     hover.x = (event.motion.x / grid_cell_size) * grid_cell_size;
                     hover.y = (event.motion.y / grid_cell_size) * grid_cell_size;
                     if (!mouse_active)
@@ -474,8 +473,8 @@ Etat graphicalLoop(Partie *partie, int mode) {
 
         // Play IA shot
         if (mode == 1 && partie->tour == 1) {
-            coup = 1;
-            playIAShot(partie, 1);
+            coup = playIAShot(partie, 1);
+            printf("Placement ia : %d\n", coup);
         }
 
         // Draw grid pawns.

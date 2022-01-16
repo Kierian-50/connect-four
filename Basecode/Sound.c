@@ -13,6 +13,16 @@ void* loopMusicTheme() {
         playMusic(MUSIC_THEME_PATH);
 }
 
+void* playWinMusic() {
+    playMusic(WIN_MUSIC_PATH);
+    SDL_Quit();
+}
+
+void* playLoseMusic() {
+    playMusic(LOSE_MUSIC_PATH);
+    SDL_Quit();
+}
+
 /**
  * This function allows to play a music once
  * @param musicPath path of the music file to play
