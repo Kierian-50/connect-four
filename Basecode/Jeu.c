@@ -261,12 +261,23 @@ int bouclePrincipale(Partie* partie) {
     pthread_create(&threadId, NULL, loopMusicTheme, NULL);
 
     // Select game mode
-    printf("\n1. Joueur VS IA basique\n2. Joueur VS Joueur\nChoisissez un mode de jeu : ");
+    printf("\n1. Joueur VS IA\n2. Joueur VS Joueur\nChoisissez un mode de jeu : ");
     int mode;
     scanf("%d", &mode);
     while (mode != 1 && mode != 2) {
         printf("Veuillez sélectionner l'option 1 ou 2 : ");
         scanf("%d", &mode);
+    }
+
+    int ia = 0;
+    if (mode == 1) {
+//        printf("\n1. IA basique\n2. IA moyenne\nChoisissez le niveau de difficulté : ");
+        printf("\n1. IA basique\nChoisissez le niveau de difficulté : ");
+        scanf("%d", &ia);
+        while (ia != 1) {
+            printf("Veuillez sélectionner l'option 1 : ");
+            scanf("%d", &ia);
+        }
     }
 
     // Select interface mode
@@ -299,14 +310,17 @@ int bouclePrincipale(Partie* partie) {
                         afficher(partie);
                 } while (coup != 1);
             } else {
-                playIAShot(partie, interface);
+                if (ia == 1)
+                    playBasicIAShot(partie, interface);
+//                else if (ia == 2)
+//                    playMediumIAShot(partie, interface);
             }
 
             etat = calculerEtat(partie);
             partie->tour = 2 - partie->tour + 1;
         }
     } else {
-        etat = graphicalLoop(partie, mode);
+        etat = graphicalLoop(partie, mode, ia);
     }
 
     // Stop music theme loop and close audio device
@@ -344,7 +358,7 @@ int bouclePrincipale(Partie* partie) {
  * @param partie game on which IA must play his shot
  * @param interface interface chosen by player : display IA shot if we are in console mode
  */
-int playIAShot(Partie* partie, int interface) {
+int playBasicIAShot(Partie* partie, int interface) {
     int highestEval = 0;
     int columnToPlay = 0;
 
@@ -370,12 +384,51 @@ int playIAShot(Partie* partie, int interface) {
 }
 
 /**
+ * This function allows to play a medium IA shot in function of score returned by evaluationCase
+ * @param partie game on which IA must play his shot
+ * @param interface interface chosen by player : display IA shot if we are in console mode
+ */
+int playMediumIAShot(Partie* partie, int interface) {
+
+    Arbre* arbre = minmax(partie, 6, 1);
+
+    int columnToPlay = -1;
+
+    for (int i=1; i<=7; i++) {
+        if (arbre->enfants[i]->score == 1000) {
+            columnToPlay = i;
+            break;
+        } else if (arbre->enfants[i]->score == -1000) {
+            columnToPlay = i;
+            break;
+        }
+    }
+
+    if (columnToPlay == -1){
+        int max = -10000;
+        for (int i=1; i<=7; i++) {
+            if (max <= columnToPlay) {
+                columnToPlay = i;
+            }
+        }
+    }
+
+    int coup = jouerCoup(partie, columnToPlay);
+    if (interface == 2) {
+        afficher(partie);
+        printf("IA a joué : %d", columnToPlay);
+    }
+    return coup;
+}
+
+/**
  * This function allows to display a game in graphical mode thanks to SDL2 library
  * @param partie game to display
  * @param mode chosen mode : IA vs Player or Player vs Player
+ * @param ia chosen ia mode : basic or medium
  * @return state of the game : EGALITE, VICTOIRE_J1 or VICTOIRE_J2
  */
-Etat graphicalLoop(Partie *partie, int mode) {
+Etat graphicalLoop(Partie *partie, int mode, int ia) {
 
     // define grid cell size, grid width, grid height, window width and window height
     int grid_cell_size = 100;
@@ -472,7 +525,10 @@ Etat graphicalLoop(Partie *partie, int mode) {
 
         // Play IA shot
         if (mode == 1 && partie->tour == 1) {
-            coup = playIAShot(partie, 1);
+            if (ia == 1)
+                coup = playBasicIAShot(partie, 1);
+//            else if (ia == 2)
+//                coup = playMediumIAShot(partie, 1);
         }
 
         // Draw grid pawns.

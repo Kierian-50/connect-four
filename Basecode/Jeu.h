@@ -46,19 +46,27 @@ Etat calculerEtat(Partie* partie);
 int bouclePrincipale(Partie* partie);
 
 /**
- * This function allows to play an IA shot in function of score returned by evaluationCase
+ * This function allows to play a basic IA shot in function of score returned by evaluationCase
  * @param partie game on which IA must play his shot
  * @param interface interface chosen by player : display IA shot if we are in console mode
  */
-int playIAShot(Partie* partie, int interface);
+int playBasicIAShot(Partie* partie, int interface);
+
+/**
+ * This function allows to play a medium IA shot in function of score returned by evaluationCase
+ * @param partie game on which IA must play his shot
+ * @param interface interface chosen by player : display IA shot if we are in console mode
+ */
+int playMediumIAShot(Partie* partie, int interface);
 
 /**
  * This function allows to display a game in graphical mode thanks to SDL2 library
  * @param partie game to display
  * @param mode chosen mode : IA vs Player or Player vs Player
+ * @param ia chosen ia mode : basic or medium
  * @return state of the game : EGALITE, VICTOIRE_J1 or VICTOIRE_J2
  */
-Etat graphicalLoop(Partie *partie, int mode);
+Etat graphicalLoop(Partie *partie, int mode, int ia);
 
 /**
  * This function allows to draw a filled circle point per point

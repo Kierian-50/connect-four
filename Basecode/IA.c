@@ -525,11 +525,8 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
 
         if (jouerCoup(pCopy, i) == 1) {
             arbre->enfants[i] = minmax(pCopy, profondeur-1, 1-IA);
-            if (arbre->score < arbre->enfants[i]->score) {
+            if (arbre->score < arbre->enfants[i]->score)
                 arbre->score = arbre->enfants[i]->score;
-            } else {
-                free(pCopy);
-            }
         }
     }
 
