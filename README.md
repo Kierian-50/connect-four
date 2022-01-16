@@ -34,7 +34,7 @@ développement, en bac +3.
 
 Le but de base du projet est la réalisation en C d’un jeu de Puissance 4. Pour rappel, le jeu
 de Puissance 4 se joue dans une grille verticale de 6 lignes par 7 colonnes, dans laquelle
-deux joueurs s’affrontent. A chaque tour, un des deux joueurs choisit une colonne où
+deux joueurs s’affrontent. À chaque tour, un des deux joueurs choisit une colonne où
 placer un pion, dans laquelle celui-ci va glisser par gravité. La partie s’arrête lorsque (1)
 un des joueurs a réussi à aligner au moins 4 pions (horizontalement, verticalement ou en
 diagonale, comme pour le jeu de morpion) ou (2) si la grille est pleine (dans ce cas, on a
