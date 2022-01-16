@@ -23,12 +23,12 @@ Jeu de puissance 4
 
 #### Environnement de développement
 
-- Nous avons développé sur le logiciel CLion.
+- Nous avons développé sur l'IDE CLion.
 
 ## Dans quel contexte avons-nous réalisé ce projet ?
 
-Nous avons réalisé ce projet dans le cadre de nos études à l'ESIEA dans le cadre d'un test de compétance en 
-développement en bac +3.
+Nous avons réalisé ce projet durant nos études à l'ESIEA, dans le cadre d'un test de compétences en 
+développement, en bac +3.
 
 ## Le but du projet
 
@@ -43,29 +43,31 @@ une égalité).
 Pour aller plus loin, nous avons pour objectif de développer un mode de jeu un joueur physique contre un autre joueur
 physique et un autre mode de jeu ou un joueur physique affronte une intelligence artificielle. Cette intelligence 
 articielle comprendra deux niveaux de difficultés : 
-- Un niveau basique : L'IA place son pion là où il y a le plus de possibilités d'alligner quatre pions, mais elle 
-  placera tout de même en priorité son pion pour aligner quatre pions ou pour empecher que l'adversaire en alligne 
+- Un niveau basique : L'IA place son pion là où il y a le plus de possibilités d'aligner quatre pions, mais elle 
+  placera tout de même en priorité son pion pour aligner quatre pions ou pour empêcher que l'adversaire d'en aligner 
   quatre.
   
 - Un niveau plus complexe : Implementation d'un algorithme minmax.
 
-Enfin, le dernière objectif était de développer une interface graphique à l'aide de la librairie SDL2 qui était
+Enfin, le dernier objectif était de développer une interface graphique à l'aide de la librairie SDL2 qui était
 imposé et que nous ne connaissions pas.
 
 ## La progression du projet
 
 Nous avons rapidement implémenté le moteur de jeu, donc il est possible de réaliser des parties à deux personnes en
 mode graphique, ce fût notre première réalisation. Ensuite, nous avons implémenté l'IA basique que nous avons ajouté
-à la boucle de jeu, ce qui fait qu'il est possible de jouer en mode console contre l'IA basique. Nous avons par la 
-suite ajouté le mode graphique via SDL, donc il est possible de jouer en mode graphique contre l'IA ou contre une 
-personne. Nous sommes allés plus loin avec la librairie, puisque nous nous sommes amusés à rajouter une musique 
-d'ambience réalisé par Matéo. Nous avons aussi ajouté des bruitages en cas de victoire ou de défaite. 
+à la boucle de jeu, ce qui fait qu'il est possible de jouer en mode console contre l'IA basique.
+
+Nous avons par la suite ajouté le mode graphique en utilisant la librairie SDL, donc il est possible de jouer en mode 
+graphique contre l'IA ou contre une personne. Nous sommes allés plus loin avec cette librairie, puisque nous nous sommes 
+amusés à rajouter une musique d'ambiance réalisée par Matéo. Nous avons aussi ajouté des bruitages en cas de victoire ou 
+de défaite. Les musiques sont gérées via des threads afin de ne pas bloquer la boucle de jeu.
 
 TODO IA minmax/
 
 ## Les installations requises pour faire fonctionner le logiciel
 
-Il est absolument nécessaire d'avoir installer SDL2 pour pouvoir faire fonctionner le logiciel, en faisant par exemple
+Il est absolument nécessaire d'avoir installé SDL2 pour pouvoir faire fonctionner le logiciel, en faisant par exemple
 sur Ubuntu :
 
 ```bash
@@ -78,7 +80,7 @@ Il faut que la librairie soit accessible en faisant :
 #include <SDL.h>
 ```
 
-et non 
+ou
 
 ```C
 #include <SDL2/SDL.h>
@@ -89,4 +91,32 @@ et non
 >**Le logiciel fonctionne uniquement sur Linux**.
 
 Une fois que vous êtes dans un environnement linux et que SDL est installé comme expliqué un peu plus haut, vous 
-serez en mesure de lancer le logiciel en ajoutant le flag "-pthread" afin de pouvoir utiliser les threads.
+serez en mesure de lancer le logiciel <ins>**en ajoutant le flag "-pthread" lors de la compilation afin de pouvoir utiliser les threads.**</ins>
+
+Vous pourrez trouver ci-dessous un exemple de cmake :
+
+```cmake
+cmake_minimum_required(VERSION 3.21)
+project(connect_four C)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lSDL2 -pthread")
+
+find_package(SDL2 REQUIRED)
+
+include_directories(Basecode)
+
+add_executable(connect_four
+        Basecode/IA.c
+        Basecode/IA.h
+        Basecode/Jeu.c
+        Basecode/Jeu.h
+        Basecode/main.c
+        Basecode/TestJeu.c
+        Basecode/TestJeu.h
+        Basecode/Sound.c
+        Basecode/Sound.h)
+
+target_link_libraries(connect_four SDL2::SDL2)
+
+```
