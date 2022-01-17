@@ -17,7 +17,7 @@ Jeu de puissance 4
 
 - C
 
-#### Librairies utilisés
+#### Librairie utilisé
 
 - SDL2
 
@@ -47,7 +47,7 @@ articielle comprendra deux niveaux de difficultés :
   placera tout de même en priorité son pion pour aligner quatre pions ou pour empêcher que l'adversaire d'en aligner 
   quatre.
   
-- Un niveau plus complexe : Implementation d'un algorithme minmax.
+- Un niveau plus complexe : Implementation de l'algorithme minmax.
 
 Enfin, le dernier objectif était de développer une interface graphique à l'aide de la librairie SDL2 qui était
 imposé et que nous ne connaissions pas.
@@ -63,7 +63,16 @@ graphique contre l'IA ou contre une personne. Nous sommes allés plus loin avec 
 amusés à rajouter une musique d'ambiance réalisée par Matéo. Nous avons aussi ajouté des bruitages en cas de victoire ou 
 de défaite. Les musiques sont gérées via des threads afin de ne pas bloquer la boucle de jeu.
 
-TODO IA minmax/
+Concernant l'intelligence artificielle qui implémente l'algorithme minmax, nous avons implémenté l'algorithme et l'avons
+testé unitairement avec de bons résultats mais nous n'avons pas eu le temps de gérer des bugs dans la boucle de jeu.
+Nous avons retiré cette fonctionnalité de la boucle de jeu pour éviter que l'utilisateur l'utilise et ne comprenne pas
+que le jeu crash. Il s'emblerait que le problème vienne d'un problème de mémoire mais nous n'avons pas eu le temps de 
+comprendre d'où venait l'erreur, d'autant plus que durant les tests unitaires nous n'avons pas eu de bug, mieux les 
+résultats étaient bons.
+
+Comme vous pouvez le voir dans le code source, nous avons tenu à tester unitairement toutes les méthodes afin de 
+vérifier le bon comportement de la méthode dans différents cas normaux, limites et d'erreurs. Une méthode *TestJeu*
+contient toutes les méthodes de test.
 
 ## Les installations requises pour faire fonctionner le logiciel
 
@@ -91,7 +100,8 @@ ou
 >**Le logiciel fonctionne uniquement sur Linux**.
 
 Une fois que vous êtes dans un environnement linux et que SDL est installé comme expliqué un peu plus haut, vous 
-serez en mesure de lancer le logiciel <ins>**en ajoutant le flag "-pthread" lors de la compilation afin de pouvoir utiliser les threads.**</ins>
+serez en mesure de lancer le logiciel <ins>**en ajoutant le flag "-pthread" lors de la compilation afin de pouvoir 
+utiliser les threads.**</ins>
 
 Vous pourrez trouver ci-dessous un exemple de cmake :
 
@@ -118,5 +128,12 @@ add_executable(connect_four
         Basecode/Sound.h)
 
 target_link_libraries(connect_four SDL2::SDL2)
-
 ```
+
+>**N'hésitez pas à mettre le son durant l'utilisation du logiciel afin de profiter de la musique d'ambiance et 
+> des bruitages**.
+
+>**Lancement des tests**.
+
+Pour lancer les tests unitaires, il suffit de décommenter les lignes qui se trouvent dans le main et executer. Dans la
+console, vous pourrez visualiser le résultat des tests.
