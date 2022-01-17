@@ -18,6 +18,7 @@ int main(int argc, char** argv){
 //    testCalculerEtat();
 //    testEvaluationCase();
 //    testEvaluation();
+//    testMinMax();
 
     do {
         int tour = 2;
