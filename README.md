@@ -25,6 +25,10 @@ Jeu de puissance 4
 
 - Nous avons développé sur l'IDE CLion.
 
+#### Lien du dépot github
+
+- https://github.com/Kierian-50/connect-four
+
 ## Dans quel contexte avons-nous réalisé ce projet ?
 
 Nous avons réalisé ce projet durant nos études à l'ESIEA, dans le cadre d'un test de compétences en 
