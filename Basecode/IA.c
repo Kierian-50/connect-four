@@ -506,7 +506,7 @@ int evaluation(Partie* partie){
  */
 Arbre* minmax(Partie* partie, int profondeur, int IA){
 
-    Arbre *arbre = (Arbre*) calloc(1, sizeof(arbre));
+    Arbre *arbre = (Arbre*) calloc(1, sizeof(Arbre));
     arbre->partie = copierPartie(partie);
 
     Etat state = calculerEtat(partie);
@@ -549,6 +549,7 @@ Arbre* minmax(Partie* partie, int profondeur, int IA){
  * Cette méthode permet de liberer la mémoire en supprimant l'arbre en parametre.
  * @param arbre The variable to delete | La variable à supprimer.
  */
-void detruireArbre(Arbre* arbre){
-    free(arbre);
+void detruireArbre(Arbre* arbre) {
+    if (arbre != NULL)
+        free(arbre);
 }

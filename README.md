@@ -68,9 +68,9 @@ amusés à rajouter une musique d'ambiance réalisée par Matéo. Nous avons aus
 de défaite. Les musiques sont gérées via des threads afin de ne pas bloquer la boucle de jeu.
 
 Concernant l'intelligence artificielle qui implémente l'algorithme minmax, nous avons implémenté l'algorithme et l'avons
-testé unitairement avec de bons résultats mais nous n'avons pas eu le temps de gérer des bugs dans la boucle de jeu.
+testé unitairement avec de bons résultats, mais nous n'avons pas eu le temps de gérer des bugs dans la boucle de jeu.
 Nous avons retiré cette fonctionnalité de la boucle de jeu pour éviter que l'utilisateur l'utilise et ne comprenne pas
-que le jeu crash. Il s'emblerait que le problème vienne d'un problème de mémoire mais nous n'avons pas eu le temps de 
+que le jeu crash. Il semblerait que le problème vienne d'un problème de mémoire, mais nous n'avons pas eu le temps de 
 comprendre d'où venait l'erreur, d'autant plus que durant les tests unitaires nous n'avons pas eu de bug, mieux les 
 résultats étaient bons.
 
